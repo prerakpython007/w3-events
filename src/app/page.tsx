@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import ButtonGroup from "./_components/buttonGroup";
 
 export default function Home() {
