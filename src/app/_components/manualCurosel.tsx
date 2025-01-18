@@ -2,11 +2,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { Yatra_One } from 'next/font/google';
+
 const yatraOne = Yatra_One({
     weight: '400',
     subsets: ['latin'],
     variable: '--font-yatra'
-  });
+});
 
 interface Testimonial {
   avatar: string;
@@ -98,7 +99,7 @@ const TestimonialCarousel = () => {
 
   return (
     <div className="w-full my-16 py-8">
-        <h2 className={`${yatraOne.className} text-center text-4xl py-9`}>What Our Community Says</h2>
+      <h2 className={`${yatraOne.className} text-center text-4xl py-9`}>What Our Community Says</h2>
       <div className="max-w-[96vw] mx-auto relative">
         
         <button 
@@ -141,7 +142,7 @@ const TestimonialCarousel = () => {
                 </div>
               </div>
               <p className="text-white text-lg mb-3">
-                "{testimonial.text}"
+                &ldquo;{testimonial.text}&rdquo;
               </p>
               <p className="text-gray-400 text-sm">
                 {testimonial.date}
