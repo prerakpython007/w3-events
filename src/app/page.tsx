@@ -2,6 +2,9 @@ import { Yatra_One } from "next/font/google";
 import ButtonGroup from "./_components/buttonGroup";
 import StatsNum from "./_components/stats";
 import EventGrid from "./_components/eventGrid";
+import Carousel from "./_components/courocel";
+import TestimonialCarousel from "./_components/manualCurosel";
+import Footer from "./_components/footer";
 
 const yatraOne = Yatra_One({
   weight: '400',
@@ -40,6 +43,15 @@ export default function Home() {
       
       <div className="w-full">
         <EventGrid />
+      </div>
+      <div>
+        <Carousel />
+      </div>
+      <div>
+        <TestimonialCarousel/>
+      </div>
+      <div>
+        <Footer/>
       </div>
     </div>
   );

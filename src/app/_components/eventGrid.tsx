@@ -139,7 +139,7 @@ const EventGrid: FC = () => {
                         </div>
                     </div>
 
-                    <div className="w-full max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="w-full pb-5  max-w-7xl mx-auto  grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {eventCards.map((card, index) => (
                             <div key={index} className="bg-black p-3 rounded-xl transform transition-transform hover:scale-105">
                                 <Image 
@@ -157,9 +157,20 @@ const EventGrid: FC = () => {
                                 <p className="text-xs text-[#ABABAB]">{card.eventDate}</p>
                             </div>
                         ))}
+                      
                     </div>
+                    
                 </div>
+               
             </div>
+            <div className=" relative bottom-14 w-full flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8 px-4">
+                        <button className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300">
+                            Add your event
+                        </button>
+                        <button className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300">
+                            View more
+                        </button>
+                    </div>
         </div>
     )
 }
