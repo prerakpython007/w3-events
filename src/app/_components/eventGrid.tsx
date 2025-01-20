@@ -77,7 +77,7 @@ const eventCards: EventCard[] = [
     }
 ];
 
-const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, location, eventDate, index }) => {
+const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, location, eventDate}) => {
     const cardRef = useRef(null);
     const isInView = useInView(cardRef, { once: true, amount: 0.2 });
     
