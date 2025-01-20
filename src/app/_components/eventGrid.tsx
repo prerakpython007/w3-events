@@ -1,13 +1,14 @@
 "use client"
-import { FC } from "react";
+import { FC, useRef } from "react";
 import { Yatra_One } from 'next/font/google'
 import Image from 'next/image'
+import { motion, useInView, useScroll, useSpring } from 'framer-motion'
 
 const yatraOne = Yatra_One({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-yatra'
-}) as { className: string };  // Add type assertion here
+    weight: '400',
+    subsets: ['latin'],
+    variable: '--font-yatra'
+}) as { className: string };
 
 interface EventCard {
     image: string;
@@ -76,9 +77,50 @@ const eventCards: EventCard[] = [
     }
 ];
 
+const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, location, eventDate, index }) => {
+    const cardRef = useRef(null);
+    const isInView = useInView(cardRef, { once: true, amount: 0.2 });
+    
+    return (
+        <motion.div
+            ref={cardRef}
+            initial={{ opacity: 0, y: 50 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="bg-black p-3 rounded-xl transform transition-transform hover:scale-105"
+        >
+            <Image 
+                src={image}
+                alt={title}
+                width={400}
+                height={300}
+                className="w-full h-48 object-cover rounded-lg"
+            />
+            <div className="flex justify-between items-center py-3">
+                <p className={yatraOne.className}>{title}</p>
+                <p className="text-xs">{date}</p>
+            </div>
+            <p className="text-xs text-[#ABABAB] mb-1">📍{location}</p>
+            <p className="text-xs text-[#ABABAB]">{eventDate}</p>
+        </motion.div>
+    );
+};
+
 const EventGrid: FC = () => {
+    const { scrollYProgress } = useScroll();
+    const scaleX = useSpring(scrollYProgress, {
+        stiffness: 100,
+        damping: 30,
+        restDelta: 0.001
+    });
+
     return (
         <div className="w-full min-h-screen">
+            <motion.div 
+                className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-white to-[#85472B] origin-left z-50"
+                style={{ scaleX }}
+            />
+            
             <div className="w-full h-fit min-h-screen relative rounded-3xl overflow-hidden">
                 <Image 
                     src="/bg1.png" 
@@ -92,7 +134,12 @@ const EventGrid: FC = () => {
                 <div className="absolute inset-0 bg-black/50"></div>
                 
                 <div className="relative flex flex-col items-center p-4 sm:p-6 md:p-8 lg:p-10">
-                    <div className="w-full max-w-4xl mx-auto text-center space-y-4 mt-4 sm:mt-6 md:mt-8 lg:mt-10">
+                    <motion.div 
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="w-full max-w-4xl mx-auto text-center space-y-4 mt-4 sm:mt-6 md:mt-8 lg:mt-10"
+                    >
                         <h1 className={`
                             ${yatraOne.className}
                             text-2xl sm:text-3xl md:text-4xl lg:text-4xl
@@ -108,7 +155,12 @@ const EventGrid: FC = () => {
                             Empowering over 10,000 pioneers through 500+ events and 200+ collaborations.
                         </p>
 
-                        <div className="w-full py-10 max-w-[280px] sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto px-4 mb-8">
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.5 }}
+                            className="w-full py-10 max-w-[280px] sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto px-4 mb-8"
+                        >
                             <div className="relative group">
                                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent rounded-full blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100"></div>
                                 <input
@@ -136,43 +188,32 @@ const EventGrid: FC = () => {
                                     </svg>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </motion.div>
+                    </motion.div>
 
-                    <div className="w-full pb-5  max-w-7xl mx-auto  grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="w-full pb-5 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {eventCards.map((card, index) => (
-                            <div key={index} className="bg-black p-3 rounded-xl transform transition-transform hover:scale-105">
-                                <Image 
-                                    src={card.image}
-                                    alt={card.title}
-                                    width={400}
-                                    height={300}
-                                    className="w-full h-48 object-cover rounded-lg"
-                                />
-                                <div className="flex justify-between items-center py-3">
-                                    <p className={yatraOne.className}>{card.title}</p>
-                                    <p className="text-xs">{card.date}</p>
-                                </div>
-                                <p className="text-xs text-[#ABABAB] mb-1">📍{card.location}</p>
-                                <p className="text-xs text-[#ABABAB]">{card.eventDate}</p>
-                            </div>
+                            <EventCard key={index} {...card} index={index} />
                         ))}
-                      
                     </div>
-                    
                 </div>
-               
             </div>
-            <div className=" relative bottom-14 w-full flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8 px-4">
-                        <button className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300">
-                            Add your event
-                        </button>
-                        <button className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300">
-                            View more
-                        </button>
-                    </div>
+            
+            <motion.div 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="relative bottom-14 w-full flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8 px-4"
+            >
+                <button className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300">
+                    Add your event
+                </button>
+                <button className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300">
+                    View more
+                </button>
+            </motion.div>
         </div>
-    )
-}
+    );
+};
 
 export default EventGrid;

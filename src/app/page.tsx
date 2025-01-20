@@ -28,7 +28,7 @@ const fadeInUp = {
 
 export default function Home() {
   return (
-    <div className="grid min-h-screen w-full px-4 lg:mt-32 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-28 pb-12 sm:pb-16 lg:pb-20 items-center justify-items-center font-[family-name:var(--font-geist-sans)]">
+    <div className="grid min-h-screen w-full px-4 mt-24 lg:mt-32 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-28 pb-12 sm:pb-16 lg:pb-20 items-center justify-items-center font-[family-name:var(--font-geist-sans)]">
       <motion.h1 
         initial="hidden"
         whileInView="visible"
@@ -54,20 +54,20 @@ export default function Home() {
         variants={fadeInUp}
         className="pt-2 sm:pt-3 max-w-2xl"
       >
-        <h3 className="text-[#FFD5C2] text-sm sm:text-base md:text-lg text-center">
-          Empowering over 10,000 pioneers through 500+ events and 200+ collaborations.
+        <h3 className="text-[#FFD5C2] text-sm sm:text-base mb-7 md:text-lg text-center">
+          Empowering over 10,000 pioneers through <br className="lg:hidden" /> 500+ events and 200+ collaborations.
         </h3>
       </motion.div>
       
-      <motion.div 
+      {/* <motion.div 
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={fadeInUp}
         className="pt-6 sm:pt-8"
-      >
+      > */}
         <ButtonGroup />
-      </motion.div>
+      {/* </motion.div> */}
 
       <motion.div 
         initial="hidden"
@@ -79,15 +79,15 @@ export default function Home() {
         <StatsNum />
       </motion.div>
       
-      <motion.div 
+      {/* <motion.div 
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={fadeInUp}
         className="w-full"
-      >
+      > */}
         <EventGrid />
-      </motion.div>
+      {/* </motion.div> */}
 
       <motion.div
         initial="hidden"

@@ -11,8 +11,8 @@ const yatraOne = Yatra_One({
 
 const StatsNum: FC = () => {
     return (
-        <div className="w-full px-4 mb-8 sm:mb-12 lg:mb-16">
-            <div className="mt-32 sm:mt-40 lg:mt-64">
+        <div className="w-full px-4 mb-20 sm:mb-12 lg:mb-16">
+            <div className="mt-72 sm:mt-40 lg:mt-64">
                 <h1 className={`${yatraOne.className} text-center text-2xl sm:text-3xl md:text-4xl`}>
                     We&apos;re changing lives
                 </h1>
