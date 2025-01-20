@@ -4,6 +4,7 @@ import { type FC, useState, useEffect } from 'react'
 import { Saira, Yatra_One } from 'next/font/google'
 import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 const saira = Saira({ 
   subsets: ['latin'],
@@ -38,35 +39,83 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
     setIsMenuOpen(!isMenuOpen)
   }
 
+  const navVariants = {
+    hidden: { y: -20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5 } }
+  }
+
+  const linkVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.3,
+        ease: "easeOut"
+      }
+    })
+  }
+
+  const logoVariants = {
+    hidden: { scale: 0.8, opacity: 0 },
+    visible: { 
+      scale: 1, 
+      opacity: 1, 
+      transition: { 
+        duration: 0.5,
+        delay: 0.2,
+        type: "spring",
+        stiffness: 200
+      } 
+    }
+  }
+
   return (
     <>
-      <div className={`my-5 w-[90%] sm:w-[75%] md:w-[60%] lg:w-[45%] text-[#FFD5C2] mx-auto relative z-50 ${className || ''}`}>
+      <motion.div 
+        initial="hidden"
+        animate="visible"
+        variants={navVariants}
+        className={`my-5 w-[90%] sm:w-[75%] md:w-[60%] lg:w-[45%] text-[#FFD5C2] mx-auto relative z-50 ${className || ''}`}
+      >
         <div className={`${saira.className} px-4`}>
           <div className="flex justify-between items-center h-16">
-            <div className="hidden md:flex items-center space-x-9">
-              <Link href="/contact" className="hover:text-white transition-colors">
-                Contact us
-              </Link>
-              <Link href="/about" className="hover:text-white transition-colors">
-                About
-              </Link>
+            <div className="hidden md:flex items-center space-x-9 flex-1">
+              <motion.div custom={0} variants={linkVariants}>
+                <Link href="/contact" className="hover:text-white transition-colors hover:scale-105 inline-block">
+                  Contact us
+                </Link>
+              </motion.div>
+              <motion.div custom={1} variants={linkVariants}>
+                <Link href="/about" className="hover:text-white transition-colors hover:scale-105 inline-block">
+                  About
+                </Link>
+              </motion.div>
             </div>
 
-            <div className="absolute left-1/2 transform -translate-x-1/2">
-              <Link href="/" className="flex items-center">
-                <h1 className={`${yatraOne.className} text-2xl text-white`}>
+            <motion.div 
+              variants={logoVariants}
+              className="flex-1 text-center"
+            >
+              <Link href="/" className="inline-block">
+                <h1 className={`${yatraOne.className} text-2xl text-white hover:scale-105 transition-transform`}>
                   Web3Events
                 </h1>
               </Link>
-            </div>
+            </motion.div>
 
-            <div className="hidden md:flex items-center space-x-8">
-              <Link href="/events" className="hover:text-white transition-colors">
-                Events
-              </Link>
-              <Link href="/submit-event" className="hover:text-white transition-colors">
-                Submit event
-              </Link>
+            <div className="hidden md:flex items-center space-x-8 flex-1 justify-end">
+              <motion.div custom={2} variants={linkVariants}>
+                <Link href="/events" className="hover:text-white transition-colors hover:scale-105 inline-block">
+                  Events
+                </Link>
+              </motion.div>
+              <motion.div custom={3} variants={linkVariants}>
+                <Link href="/submit-event" className="hover:text-white transition-colors hover:scale-105 inline-block">
+                  Submit event
+                </Link>
+              </motion.div>
             </div>
 
             <button 
@@ -78,7 +127,7 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <div 
         className={`

@@ -1,4 +1,6 @@
+"use client"
 import { Yatra_One } from "next/font/google";
+import { motion } from "framer-motion";
 import ButtonGroup from "./_components/buttonGroup";
 import StatsNum from "./_components/stats";
 import EventGrid from "./_components/eventGrid";
@@ -12,47 +14,107 @@ const yatraOne = Yatra_One({
   variable: '--font-yatra'
 });
 
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut"
+    }
+  }
+};
+
 export default function Home() {
   return (
-    <div className="grid min-h-screen w-full px-4 lg:mt-32  sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-28 pb-12 sm:pb-16 lg:pb-20 items-center justify-items-center font-[family-name:var(--font-geist-sans)]">
-      <h1 className={`
-        ${yatraOne.className} 
-        text-3xl sm:text-4xl md:text-5xl lg:text-[60px]
-        text-center 
-        text-transparent 
-        leading-normal sm:leading-relaxed lg:leading-[70px] 
-        bg-clip-text 
-        bg-gradient-to-br from-[#FFFFFF] to-[#85472B]
-      `}>
+    <div className="grid min-h-screen w-full px-4 lg:mt-32 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-28 pb-12 sm:pb-16 lg:pb-20 items-center justify-items-center font-[family-name:var(--font-geist-sans)]">
+      <motion.h1 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+        className={`
+          ${yatraOne.className} 
+          text-3xl sm:text-4xl md:text-5xl lg:text-[60px]
+          text-center 
+          text-transparent 
+          leading-normal sm:leading-relaxed lg:leading-[70px] 
+          bg-clip-text 
+          bg-gradient-to-br from-[#FFFFFF] to-[#85472B]
+        `}
+      >
         Join the <br className="md:hidden" /> Web3 Revolution
-      </h1>
+      </motion.h1>
       
-      <div className="pt-2 sm:pt-3 max-w-2xl">
+      <motion.div 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+        className="pt-2 sm:pt-3 max-w-2xl"
+      >
         <h3 className="text-[#FFD5C2] text-sm sm:text-base md:text-lg text-center">
           Empowering over 10,000 pioneers through 500+ events and 200+ collaborations.
         </h3>
-      </div>
+      </motion.div>
       
-      <div className="pt-6 sm:pt-8">
+      <motion.div 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+        className="pt-6 sm:pt-8"
+      >
         <ButtonGroup />
-      </div>
+      </motion.div>
 
-      <div className="w-full">
+      <motion.div 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+        className="w-full"
+      >
         <StatsNum />
-      </div>
+      </motion.div>
       
-      <div className="w-full">
+      <motion.div 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+        className="w-full"
+      >
         <EventGrid />
-      </div>
-      <div>
+      </motion.div>
+
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
         <Carousel />
-      </div>
-      <div>
+      </motion.div>
+
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
         <TestimonialCarousel/>
-      </div>
-      <div>
+      </motion.div>
+
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
         <Footer/> 
-      </div>
+      </motion.div>
     </div>
   );
 }
