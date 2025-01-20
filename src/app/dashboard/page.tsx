@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Plus, X, Upload } from 'lucide-react';
 import Image from 'next/image';
 import { Yatra_One } from 'next/font/google';
-import { style } from 'framer-motion/client';
+
 
 const yatraOne = Yatra_One({
     weight: '400',
