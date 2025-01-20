@@ -2,7 +2,7 @@
 
 import { type FC, useState, useEffect } from 'react'
 import { Saira, Yatra_One } from 'next/font/google'
-import { Menu, X } from 'lucide-react'
+import { LayoutDashboard, Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
@@ -112,11 +112,18 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
                 </Link>
               </motion.div>
               <motion.div custom={3} variants={linkVariants}>
-                <Link href="/submit-event" className="hover:text-white transition-colors hover:scale-105 inline-block">
+                <Link href="/submit-event" className="hover:text-white transition-colors hover:scale-105 inline-block whitespace-nowrap">
                   Submit event
                 </Link>
               </motion.div>
             </div>
+
+            <motion.div custom={4} variants={linkVariants} className="hidden md:block absolute -right-60">
+                <Link href="/dashboard" className="hover:text-white transition-colors hover:scale-105 inline-flex gap-1 mt-1 items-center ">
+                    <LayoutDashboard className="w-4 h-4 " />
+                    Dashboard
+                </Link>
+            </motion.div>
 
             <button 
               onClick={toggleMenu}
@@ -128,7 +135,7 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
           </div>
         </div>
       </motion.div>
-
+      
       <div 
         className={`
           fixed inset-0 bg-black z-40
@@ -158,6 +165,13 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
             onClick={toggleMenu}
           >
             Events
+          </a>
+          <a 
+            href="/dashboard" 
+            className="text-[#FFD5C2] hover:text-white transition-colors text-2xl"
+            onClick={toggleMenu}
+          >
+              Dashboard
           </a>
           <a 
             href="/submit-event" 
