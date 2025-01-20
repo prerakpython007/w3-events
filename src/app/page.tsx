@@ -14,7 +14,7 @@ const yatraOne = Yatra_One({
 
 export default function Home() {
   return (
-    <div className="grid min-h-screen w-full px-4 mt-32 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-28 pb-12 sm:pb-16 lg:pb-20 items-center justify-items-center font-[family-name:var(--font-geist-sans)]">
+    <div className="grid min-h-screen w-full px-4 lg:mt-32  sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-28 pb-12 sm:pb-16 lg:pb-20 items-center justify-items-center font-[family-name:var(--font-geist-sans)]">
       <h1 className={`
         ${yatraOne.className} 
         text-3xl sm:text-4xl md:text-5xl lg:text-[60px]
@@ -51,7 +51,7 @@ export default function Home() {
         <TestimonialCarousel/>
       </div>
       <div>
-        <Footer/>
+        <Footer/> 
       </div>
     </div>
   );

@@ -56,7 +56,8 @@ const TestimonialCarousel = () => {
     if (!containerRef.current) return;
 
     const container = containerRef.current;
-    const cardWidth = 340; // Width of one card + gap
+    // Make card width responsive based on screen size
+    const cardWidth = window.innerWidth < 640 ? container.clientWidth : 340;
     const maxScroll = container.scrollWidth - container.clientWidth;
     
     let newPosition = direction === 'right' 
@@ -100,11 +101,11 @@ const TestimonialCarousel = () => {
   return (
     <div className="w-full my-16 py-8">
       <h2 className={`${yatraOne.className} text-center text-4xl py-9`}>What Our Community Says</h2>
-      <div className="max-w-[96vw] mx-auto relative">
+      <div className="max-w-[92vw] md:max-w-[96vw] mx-auto relative">
         
         <button 
           onClick={() => scroll('left')}
-          className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 bg-[#1E1E1E] hover:bg-[#2a2a2a] p-2 rounded-full transition-colors"
+          className="absolute -left-2 md:-left-4 top-1/2 -translate-y-1/2 z-10 bg-[#1E1E1E] hover:bg-[#2a2a2a] p-2 rounded-full transition-colors"
         >
           <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="white">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -113,7 +114,7 @@ const TestimonialCarousel = () => {
         
         <button 
           onClick={() => scroll('right')}
-          className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 bg-[#1E1E1E] hover:bg-[#2a2a2a] p-2 rounded-full transition-colors"
+          className="absolute -right-2 md:-right-4 top-1/2 -translate-y-1/2 z-10 bg-[#1E1E1E] hover:bg-[#2a2a2a] p-2 rounded-full transition-colors"
         >
           <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="white">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -123,15 +124,15 @@ const TestimonialCarousel = () => {
         {/* Testimonials container */}
         <div 
           ref={containerRef}
-          className="flex gap-6 overflow-x-hidden scroll-smooth px-4 scrollbar-hide"
+          className="flex gap-4 md:gap-6 overflow-x-hidden scroll-smooth px-2 md:px-4 scrollbar-hide"
         >
           {extendedTestimonials.map((testimonial, index) => (
             <div 
               key={index} 
-              className="flex-shrink-0 w-80 bg-[#1E1E1E] rounded-2xl p-6 transition-transform"
+              className="flex-shrink-0 w-full sm:w-80 bg-[#1E1E1E] rounded-2xl p-4 md:p-6 transition-transform"
             >
               <div className="flex items-center mb-4">
-                <div className="w-9 h-9 rounded-full overflow-hidden ">
+                <div className="w-9 h-9 rounded-full overflow-hidden">
                   <Image
                     src={testimonial.avatar}
                     alt="User avatar"
@@ -141,7 +142,7 @@ const TestimonialCarousel = () => {
                   />
                 </div>
               </div>
-              <p className="text-white text-lg mb-3">
+              <p className="text-white text-base md:text-lg mb-3">
                 &ldquo;{testimonial.text}&rdquo;
               </p>
               <p className="text-gray-400 text-sm">
