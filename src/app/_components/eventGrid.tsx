@@ -1,9 +1,10 @@
 "use client"
-import { FC, useRef } from "react";
-import { Yatra_One } from 'next/font/google'
-import Image from 'next/image'
-import { motion, useInView, useScroll, useSpring } from 'framer-motion'
-
+import { FC, useState, useRef } from "react";
+import { Yatra_One } from 'next/font/google';
+import Image from 'next/image';
+import { motion, useInView, useScroll, useSpring } from 'framer-motion';
+import { X } from 'lucide-react';
+import { EventCardType, useEvents } from "./context/EventContext";
 
 const yatraOne = Yatra_One({
     weight: '400',
@@ -11,75 +12,76 @@ const yatraOne = Yatra_One({
     variable: '--font-yatra'
 }) as { className: string };
 
-interface EventCard {
-    image: string;
-    title: string;
-    date: string;
-    location: string;
-    eventDate: string;
+// Event Detail Modal Component
+interface EventDetailModalProps {
+    event: EventCardType;
+    onClose: () => void;
 }
 
-const eventCards: EventCard[] = [
-    { 
-        image: "/frame1.png",
-        title: "Arijit Events",
-        date: "11 marh",
-        location: "Rajpath club, Ahmedabad",
-        eventDate: "23 Nov 2023"
-    },
-    { 
-        image: "/frame2.png",
-        title: "Creative Designs",
-        date: "11 arch",
-        location: "Main street, Barcelona",
-        eventDate: "10 Oct 2023"
-    },
-    { 
-        image: "/frame3.png",
-        title: "Innovative Creations",
-        date: "11march",
-        location: "Central Park, New York",
-        eventDate: "23 Nov2023"
-    },
-    { 
-        image: "/frame4.png",
-        title: "Artistic Productions",
-        date: "1 march",
-        location: "Golden Gate Bridge, San Francisco",
-        eventDate: "23 Nov 223"
-    },
-    { 
-        image: "/frame5.png",
-        title: "Majestic Events",
-        date: "11 marc",
-        location: "Taj Mahal, Agra",
-        eventDate: "23 Nov 23"
-    },
-    { 
-        image: "/frame6.png",
-        title: "Chic Designs",
-        date: "11 mach",
-        location: "Eiffel Tower, Paris",
-        eventDate: "23 Nov 202"
-    },
-    { 
-        image: "/frame7.png",
-        title: "Avant-garde Creations",
-        date: "11 mrch",
-        location: "Sydney Opera House, Sydney",
-        eventDate: "23 Nov 023"
-    },
-    { 
-        image: "/frame8.png",
-        title: "Timeless Productions",
-        date: "1 march",
-        location: "Colosseum, Rome",
-        eventDate: "23  2023"
-    }
-];
+const EventDetailModal: FC<EventDetailModalProps> = ({ event, onClose }) => {
+    return (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-[#1E1E1E] rounded-xl p-6 max-w-2xl w-full relative"
+            >
+                <button
+                    onClick={onClose}
+                    className="absolute right-4 top-4 text-gray-400 hover:text-white"
+                >
+                    <X size={24} />
+                </button>
 
-const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, location, eventDate, index }) => {
-    const cardRef = useRef(null);
+                <div className="relative w-full h-64 mb-6 rounded-lg overflow-hidden">
+                    <Image
+                        src={event.image}
+                        alt={event.title}
+                        fill
+                        className="object-cover"
+                    />
+                </div>
+
+                <h2 className={`${yatraOne.className} text-2xl font-bold mb-4 bg-gradient-to-r from-white to-[#85472B] bg-clip-text text-transparent`}>
+                    {event.title}
+                </h2>
+
+                <div className="space-y-3">
+                    <div>
+                        <label className="text-sm text-gray-400">Date Added</label>
+                        <p className="text-white">{event.date}</p>
+                    </div>
+
+                    <div>
+                        <label className="text-sm text-gray-400">Location</label>
+                        <p className="text-white">📍 {event.location}</p>
+                    </div>
+
+                    <div>
+                        <label className="text-sm text-gray-400">Event Date</label>
+                        <p className="text-white">{event.eventDate}</p>
+                    </div>
+
+                    {event.totalUsers && (
+                        <div>
+                            <label className="text-sm text-gray-400">Total Users</label>
+                            <p className="text-white">{event.totalUsers.toLocaleString()} users</p>
+                        </div>
+                    )}
+                </div>
+            </motion.div>
+        </div>
+    );
+};
+
+interface EventCardProps {
+    event: EventCardType;
+    index: number;
+    onClick: () => void;
+}
+
+const EventCard: FC<EventCardProps> = ({ event, index, onClick }) => {
+    const cardRef = useRef<HTMLDivElement>(null);
     const isInView = useInView(cardRef, { 
         once: true, 
         amount: 0.3,
@@ -89,32 +91,21 @@ const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, loca
     return (
         <motion.div
             ref={cardRef}
-            initial={{ 
-                opacity: 0, 
-                y: 15
-            }}
-            animate={isInView ? { 
-                opacity: 1, 
-                y: 0
-            } : { 
-                opacity: 0, 
-                y: 15
-            }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
             transition={{ 
                 duration: 1.2,
                 ease: [0.16, 1, 0.3, 1],
                 delay: index * 0.15,
             }}
-            whileHover={{ 
-                y: -5,
-                transition: { duration: 0.3 }
-            }}
+            whileHover={{ y: -5, transition: { duration: 0.3 } }}
+            onClick={onClick}
             className="group bg-black/80 backdrop-blur-sm p-3 rounded-xl transform cursor-pointer"
         >
             <div className="relative overflow-hidden rounded-lg">
                 <Image 
-                    src={image}
-                    alt={title}
+                    src={event.image}
+                    alt={event.title}
                     width={400}
                     height={300}
                     className="w-full h-48 object-cover rounded-lg transition-all duration-700 group-hover:scale-110"
@@ -133,9 +124,9 @@ const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, loca
                 className="flex justify-between items-center py-3"
             >
                 <p className={`${yatraOne.className} group-hover:text-[#85472B] transition-colors duration-300`}>
-                    {title}
+                    {event.title}
                 </p>
-                <p className="text-xs text-white/70">{date}</p>
+                <p className="text-xs text-white/70">{event.date}</p>
             </motion.div>
             <motion.div
                 initial={{ opacity: 0.7 }}
@@ -143,10 +134,10 @@ const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, loca
                 transition={{ duration: 0.3 }}
             >
                 <p className="text-xs text-[#ABABAB] mb-1 group-hover:text-white/90 transition-colors duration-300">
-                    📍{location}
+                    📍{event.location}
                 </p>
                 <p className="text-xs text-[#ABABAB] group-hover:text-white/90 transition-colors duration-300">
-                    {eventDate}
+                    {event.eventDate}
                 </p>
             </motion.div>
         </motion.div>
@@ -154,12 +145,21 @@ const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, loca
 };
 
 const EventGrid: FC = () => {
+    const { events } = useEvents();
+    const [selectedEvent, setSelectedEvent] = useState<EventCardType | null>(null);
     const { scrollYProgress } = useScroll();
     const scaleX = useSpring(scrollYProgress, {
         stiffness: 100,
         damping: 30,
         restDelta: 0.001
     });
+    const [searchQuery, setSearchQuery] = useState("");
+
+    // Filter events based on search query
+    const filteredEvents = events.filter(event => 
+        event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.location.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
         <motion.div 
@@ -168,8 +168,6 @@ const EventGrid: FC = () => {
             transition={{ duration: 0.5 }}
             className="w-full min-h-screen"
         >
-   
-            
             <motion.div 
                 className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-white to-[#85472B] origin-left z-50"
                 style={{ scaleX }}
@@ -235,6 +233,8 @@ const EventGrid: FC = () => {
                                 <input
                                     type="text"
                                     placeholder="Search for events"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
                                     className="w-full py-2.5 sm:py-3.5 md:py-4 pl-12 pr-4 sm:pl-14 sm:pr-6
                                     text-sm sm:text-base md:text-lg
                                     bg-black/30 backdrop-blur-md
@@ -261,34 +261,24 @@ const EventGrid: FC = () => {
                     </motion.div>
 
                     <div className="w-full pb-5 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {eventCards.map((card, index) => (
-                            <EventCard key={index} {...card} index={index} />
+                        {filteredEvents.map((event, index) => (
+                            <EventCard 
+                                key={index}
+                                event={event}
+                                index={index}
+                                onClick={() => setSelectedEvent(event)}
+                            />
                         ))}
                     </div>
                 </div>
             </div>
             
-            <motion.div 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="relative bottom-14 w-full flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8 px-4"
-            >
-                <motion.button 
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300"
-                >
-                    Add your event
-                </motion.button>
-                <motion.button 
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300"
-                >
-                    View more
-                </motion.button>
-            </motion.div>
+            {selectedEvent && (
+                <EventDetailModal
+                    event={selectedEvent}
+                    onClose={() => setSelectedEvent(null)}
+                />
+            )}
         </motion.div>
     );
 };

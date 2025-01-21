@@ -3,6 +3,7 @@ import "./globals.css";
 import TopNav from "./_components/topNav"; // Updated to match file name casing
 import { Saira } from 'next/font/google';
 import ElegantCursor from "./_components/mouseTracker";
+import { EventProvider } from "./_components/context/EventContext";
 
 const saira = Saira({ 
   subsets: ['latin'],
@@ -32,7 +33,9 @@ export default function RootLayout({
         <ElegantCursor />
         <TopNav />
         <main>
+          <EventProvider>
           {children}
+          </EventProvider>
         </main>
       </body>
     </html>

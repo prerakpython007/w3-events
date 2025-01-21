@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Plus, X, Upload } from 'lucide-react';
 import Image from 'next/image';
 import { Yatra_One } from 'next/font/google';
-
+import { EventCardType, useEvents } from '../_components/context/EventContext';
 
 const yatraOne = Yatra_One({
     weight: '400',
@@ -12,18 +12,45 @@ const yatraOne = Yatra_One({
     variable: '--font-yatra'
 }) as { className: string };
 
-interface EventCardType {
-    image: string;
-    title: string;
-    date: string;
-    location: string;
-    eventDate: string;
-    totalUsers?: number;
-}
+// Event Card Component
+const EventCard: React.FC<{ event: EventCardType }> = ({ event }) => {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="group bg-black/80 backdrop-blur-sm p-3 rounded-xl transform cursor-pointer hover:-translate-y-1 transition-all duration-300"
+        >
+            <div className="relative overflow-hidden rounded-lg">
+                <Image 
+                    src={event.image}
+                    alt={event.title}
+                    width={400}
+                    height={300}
+                    className="w-full h-48 object-cover rounded-lg transition-all duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </div>
+            <div className="flex justify-between items-center py-3">
+                <p className={`${yatraOne.className} group-hover:text-[#85472B] transition-colors duration-300`}>
+                    {event.title}
+                </p>
+                <p className="text-xs text-white/70">{event.date}</p>
+            </div>
+            <div>
+                <p className="text-xs text-[#ABABAB] mb-1 group-hover:text-white/90 transition-colors duration-300">
+                    📍{event.location}
+                </p>
+                <p className="text-xs text-[#ABABAB] group-hover:text-white/90 transition-colors duration-300">
+                    {event.eventDate}
+                </p>
+            </div>
+        </motion.div>
+    );
+};
 
 const Dashboard: React.FC = () => {
     const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
-    const [events, setEvents] = useState<EventCardType[]>([]);
+    const { events, setEvents } = useEvents();
     const [formData, setFormData] = useState<EventCardType>({
         image: '',
         title: '',
@@ -101,8 +128,6 @@ const Dashboard: React.FC = () => {
         }
     };
 
-    
-
     return (
         <div className="min-h-screen text-white p-6">
             <motion.div
@@ -110,6 +135,7 @@ const Dashboard: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="max-w-7xl mx-auto"
             >
+                {/* Header */}
                 <div className="flex justify-between items-center mb-8">
                     <h1 className={`${yatraOne.className} lg:text-3xl md:text-2xl text-lg font-bold bg-gradient-to-r from-white to-[#85472B] bg-clip-text text-transparent`}>
                         Event Dashboard
@@ -123,7 +149,29 @@ const Dashboard: React.FC = () => {
                     </button>
                 </div>
 
-                {/* Event Form Modal */}
+                {/* Events Grid */}
+                <div className="mt-8">
+                    <h2 className="text-xl font-semibold mb-4">Your Events</h2>
+                    {events.length === 0 ? (
+                        <div className="text-center py-20 bg-black/20 rounded-xl backdrop-blur-sm">
+                            <p className="text-gray-400">No events created yet</p>
+                            <button
+                                onClick={() => setIsFormOpen(true)}
+                                className="mt-4 text-[#85472B] hover:text-[#6d3a23] transition-colors duration-300"
+                            >
+                                Create your first event
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {events.map((event, index) => (
+                                <EventCard key={index} event={event} />
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {/* Add Event Modal */}
                 {isFormOpen && (
                     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
                         <motion.div
@@ -153,7 +201,6 @@ const Dashboard: React.FC = () => {
                                         className="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#85472B]"
                                         required
                                     />
-                                   
                                 </div>
 
                                 <div>
@@ -166,7 +213,6 @@ const Dashboard: React.FC = () => {
                                         className="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#85472B] calendar-icon-white"
                                         required
                                     />
-                                    
                                 </div>
 
                                 <div>
@@ -258,59 +304,6 @@ const Dashboard: React.FC = () => {
                         </motion.div>
                     </div>
                 )}
-
-                {/* Events Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {events.map((event, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                            className="group bg-black/80 backdrop-blur-sm p-3 rounded-xl transform cursor-pointer"
-                            whileHover={{ y: -5 }}
-                        >
-                            <div className="relative overflow-hidden rounded-lg">
-                                <Image 
-                                    src={event.image}
-                                    alt={event.title}
-                                    width={400}
-                                    height={300}
-                                    className="w-full h-48 object-cover rounded-lg transition-all duration-700 group-hover:scale-110"
-                                />
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    whileHover={{ opacity: 1 }}
-                                    transition={{ duration: 0.3 }}
-                                    className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"
-                                />
-                            </div>
-                            <motion.div 
-                                initial={{ y: 0 }}
-                                whileHover={{ y: -5 }}
-                                transition={{ duration: 0.3 }}
-                                className="flex justify-between items-center py-3"
-                            >
-                                <p className={`${yatraOne.className} group-hover:text-[#85472B] transition-colors duration-300`}>
-                                    {event.title}
-                                </p>
-                                <p className="text-xs text-white/70">{event.date}</p>
-                            </motion.div>
-                            <motion.div
-                                initial={{ opacity: 0.7 }}
-                                whileHover={{ opacity: 1 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <p className="text-xs text-[#ABABAB] mb-1 group-hover:text-white/90 transition-colors duration-300">
-                                    📍{event.location}
-                                </p>
-                                <p className="text-xs text-[#ABABAB] group-hover:text-white/90 transition-colors duration-300">
-                                    {event.eventDate}
-                                </p>
-                            </motion.div>
-                        </motion.div>
-                    ))}
-                </div>
             </motion.div>
         </div>
     );
