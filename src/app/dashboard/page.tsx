@@ -5,7 +5,7 @@ import { Plus, X, Trash2 } from "lucide-react"
 import Image from "next/image"
 import { Yatra_One } from "next/font/google"
 import { supabase } from "../../../lib/supabase"
-import EventModal from "../_components/EventModal"
+import EventModal from "../../_components/EventModal"
 
 const yatraOne = Yatra_One({
   weight: "400",
