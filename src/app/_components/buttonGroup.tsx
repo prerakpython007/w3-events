@@ -2,7 +2,11 @@
 import { FC } from "react";
 import { motion } from "framer-motion";
 
-const ButtonGroup: FC = () => {
+interface ButtonGroupProps {
+  scrollToEvents: () => void;
+}
+
+const ButtonGroup: FC<ButtonGroupProps> = ({ scrollToEvents }) => {
   const buttonVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
@@ -19,20 +23,23 @@ const ButtonGroup: FC = () => {
   const buttons = [
     {
       text: "Joint Our Community",
-      className: "border-[#2E2E2E] border-2 p-2 rounded-md hover:border-gray-500 transition-all duration-300"
+      className: "border-[#2E2E2E] border-2 p-2 rounded-md hover:border-gray-500 transition-all duration-300",
+      onClick: () => window.open('https://discord.gg/yourserver', '_blank')
     },
     {
       text: "Explore Events",
-      className: "bg-gradient-to-b from-[#FF4E00] to-[#531900] hover:from-orange-400 hover:to-orange-600 transition-all p-2 rounded-md"
+      className: "bg-gradient-to-b from-[#FF4E00] to-[#531900] hover:from-orange-400 hover:to-orange-600 transition-all p-2 rounded-md",
+      onClick: scrollToEvents
     },
     {
       text: "Submit Your Event",
-      className: "border-[#2E2E2E] border-2 p-2 rounded-md hover:border-gray-500 transition-all duration-300"
+      className: "border-[#2E2E2E] border-2 p-2 rounded-md hover:border-gray-500 transition-all duration-300",
+      onClick: () => window.location.href = '/submit-event'
     }
   ];
 
   return (
-    <div className="button-group flex lg: mt-10 flex-col sm:flex-row gap-3">
+    <div className="button-group flex lg:mt-10 flex-col sm:flex-row gap-3">
       {buttons.map((button, index) => (
         <motion.button
           key={button.text}
@@ -44,6 +51,7 @@ const ButtonGroup: FC = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className={button.className}
+          onClick={button.onClick}
         >
           {button.text}
         </motion.button>

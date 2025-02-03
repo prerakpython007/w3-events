@@ -7,6 +7,7 @@ import EventGrid from "./_components/eventGrid";
 import Carousel from "./_components/courocel";
 import TestimonialCarousel from "./_components/manualCurosel";
 import Footer from "./_components/footer";
+import { useRef } from "react";
 
 const yatraOne = Yatra_One({
   weight: '400',
@@ -27,6 +28,15 @@ const fadeInUp = {
 };
 
 export default function Home() {
+  const eventGridRef = useRef<HTMLDivElement>(null);
+
+  const scrollToEvents = () => {
+    eventGridRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  };
+
   return (
     <div className="grid min-h-screen w-full px-4 mt-24 lg:mt-32 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-28 pb-12 sm:pb-16 lg:pb-20 items-center justify-items-center font-[family-name:var(--font-geist-sans)]">
       <motion.h1 
@@ -59,15 +69,7 @@ export default function Home() {
         </h3>
       </motion.div>
       
-      {/* <motion.div 
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={fadeInUp}
-        className="pt-6 sm:pt-8"
-      > */}
-        <ButtonGroup />
-      {/* </motion.div> */}
+      <ButtonGroup scrollToEvents={scrollToEvents} />
 
       <motion.div 
         initial="hidden"
@@ -79,15 +81,9 @@ export default function Home() {
         <StatsNum />
       </motion.div>
       
-      {/* <motion.div 
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={fadeInUp}
-        className="w-full"
-      > */}
+      <div ref={eventGridRef}>
         <EventGrid />
-      {/* </motion.div> */}
+      </div>
 
       <motion.div
         initial="hidden"

@@ -1,9 +1,9 @@
 "use client"
-import { FC, useRef } from "react";
+import { FC, useRef, useEffect, useState } from "react";
 import { Yatra_One } from 'next/font/google'
 import Image from 'next/image'
 import { motion, useInView, useScroll, useSpring } from 'framer-motion'
-
+import { supabase } from "../../../lib/supabase"
 
 const yatraOne = Yatra_One({
     weight: '400',
@@ -11,74 +11,16 @@ const yatraOne = Yatra_One({
     variable: '--font-yatra'
 }) as { className: string };
 
-interface EventCard {
-    image: string;
+interface Event {
+    id: string;
     title: string;
-    date: string;
+    event_date: string;
     location: string;
-    eventDate: string;
+    expires_on: string;
+    image_url: string;
 }
 
-const eventCards: EventCard[] = [
-    { 
-        image: "/frame1.png",
-        title: "Arijit Events",
-        date: "11 marh",
-        location: "Rajpath club, Ahmedabad",
-        eventDate: "23 Nov 2023"
-    },
-    { 
-        image: "/frame2.png",
-        title: "Creative Designs",
-        date: "11 arch",
-        location: "Main street, Barcelona",
-        eventDate: "10 Oct 2023"
-    },
-    { 
-        image: "/frame3.png",
-        title: "Innovative Creations",
-        date: "11march",
-        location: "Central Park, New York",
-        eventDate: "23 Nov2023"
-    },
-    { 
-        image: "/frame4.png",
-        title: "Artistic Productions",
-        date: "1 march",
-        location: "Golden Gate Bridge, San Francisco",
-        eventDate: "23 Nov 223"
-    },
-    { 
-        image: "/frame5.png",
-        title: "Majestic Events",
-        date: "11 marc",
-        location: "Taj Mahal, Agra",
-        eventDate: "23 Nov 23"
-    },
-    { 
-        image: "/frame6.png",
-        title: "Chic Designs",
-        date: "11 mach",
-        location: "Eiffel Tower, Paris",
-        eventDate: "23 Nov 202"
-    },
-    { 
-        image: "/frame7.png",
-        title: "Avant-garde Creations",
-        date: "11 mrch",
-        location: "Sydney Opera House, Sydney",
-        eventDate: "23 Nov 023"
-    },
-    { 
-        image: "/frame8.png",
-        title: "Timeless Productions",
-        date: "1 march",
-        location: "Colosseum, Rome",
-        eventDate: "23  2023"
-    }
-];
-
-const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, location, eventDate, index }) => {
+const EventCard: FC<Event & { index: number }> = ({ id, image_url, title, event_date, location, expires_on, index }) => {
     const cardRef = useRef(null);
     const isInView = useInView(cardRef, { 
         once: true, 
@@ -87,7 +29,7 @@ const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, loca
     });
     
     return (
-        <motion.div
+        <motion.div 
             ref={cardRef}
             initial={{ 
                 opacity: 0, 
@@ -113,7 +55,7 @@ const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, loca
         >
             <div className="relative overflow-hidden rounded-lg">
                 <Image 
-                    src={image}
+                    src={image_url || "/placeholder.svg"}
                     alt={title}
                     width={400}
                     height={300}
@@ -135,7 +77,9 @@ const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, loca
                 <p className={`${yatraOne.className} group-hover:text-[#85472B] transition-colors duration-300`}>
                     {title}
                 </p>
-                <p className="text-xs text-white/70">{date}</p>
+                <p className="text-xs text-white/70">
+                    {new Date(event_date).toLocaleDateString()}
+                </p>
             </motion.div>
             <motion.div
                 initial={{ opacity: 0.7 }}
@@ -146,7 +90,7 @@ const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, loca
                     📍{location}
                 </p>
                 <p className="text-xs text-[#ABABAB] group-hover:text-white/90 transition-colors duration-300">
-                    {eventDate}
+                    Expires: {new Date(expires_on).toLocaleDateString()}
                 </p>
             </motion.div>
         </motion.div>
@@ -154,12 +98,33 @@ const EventCard: FC<EventCard & { index: number }> = ({ image, title, date, loca
 };
 
 const EventGrid: FC = () => {
+    const [events, setEvents] = useState<Event[]>([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const { scrollYProgress } = useScroll();
     const scaleX = useSpring(scrollYProgress, {
         stiffness: 100,
         damping: 30,
         restDelta: 0.001
     });
+
+    useEffect(() => {
+        fetchEvents();
+    }, []);
+
+    const fetchEvents = async () => {
+        const { data, error } = await supabase
+            .from('events')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (data) setEvents(data);
+        if (error) console.error('Error:', error);
+    };
+
+    const filteredEvents = events.filter(event =>
+        event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        event.location.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <motion.div 
@@ -168,8 +133,6 @@ const EventGrid: FC = () => {
             transition={{ duration: 0.5 }}
             className="w-full min-h-screen"
         >
-   
-            
             <motion.div 
                 className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-white to-[#85472B] origin-left z-50"
                 style={{ scaleX }}
@@ -221,7 +184,7 @@ const EventGrid: FC = () => {
                             transition={{ duration: 0.8, delay: 0.4 }}
                             className="text-sm sm:text-base md:text-lg lg:text-lg text-[#FFD5C2] px-4 mb-8"
                         >
-                            Empowering over 10,000 pioneers through 500+ events and 200+ collaborations.
+                            Empowering over 10,000 pioneers through {events.length}+ events and 200+ collaborations.
                         </motion.p>
 
                         <motion.div 
@@ -235,6 +198,8 @@ const EventGrid: FC = () => {
                                 <input
                                     type="text"
                                     placeholder="Search for events"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
                                     className="w-full py-2.5 sm:py-3.5 md:py-4 pl-12 pr-4 sm:pl-14 sm:pr-6
                                     text-sm sm:text-base md:text-lg
                                     bg-black/30 backdrop-blur-md
@@ -261,8 +226,8 @@ const EventGrid: FC = () => {
                     </motion.div>
 
                     <div className="w-full pb-5 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {eventCards.map((card, index) => (
-                            <EventCard key={index} {...card} index={index} />
+                        {filteredEvents.map((event, index) => (
+                            <EventCard key={event.id} {...event} index={index} />
                         ))}
                     </div>
                 </div>
