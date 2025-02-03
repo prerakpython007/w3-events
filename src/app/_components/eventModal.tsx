@@ -2,7 +2,7 @@
 import { motion } from "framer-motion"
 import { X, Upload } from "lucide-react"
 import { Yatra_One } from "next/font/google"
-import { ChangeEvent, FormEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useState, useCallback } from "react"
 
 const yatraOne = Yatra_One({
   weight: "400",
@@ -42,7 +42,7 @@ const EventModal = ({
     image: null as File | null,
   })
 
-  const handleImageUpload = (file: File) => {
+  const handleImageUpload = useCallback((file: File) => {
     if (!file.type.startsWith("image/")) {
       alert("Please upload an image file")
       return
@@ -54,18 +54,18 @@ const EventModal = ({
     }
 
     setFormData(prev => ({ ...prev, image: file }))
-  }
+  }, [])
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = e.target
     if (name === "image" && files && files[0]) {
       handleImageUpload(files[0])
     } else {
       setFormData(prev => ({ ...prev, [name]: value }))
     }
-  }
+  }, [handleImageUpload])
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault()
     if (mode === 'add' && onSubmit) {
       onSubmit(formData)
@@ -77,32 +77,38 @@ const EventModal = ({
         image: null,
       })
     }
-  }
+  }, [mode, onSubmit, formData])
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(true)
-  }
+  }, [])
 
-  const handleDragLeave = (e: React.DragEvent) => {
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
-  }
+  }, [])
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
     const file = e.dataTransfer.files[0]
     if (file) handleImageUpload(file)
-  }
+  }, [handleImageUpload])
 
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+    >
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
         className="bg-[#1E1E1E] rounded-xl p-6 max-w-md w-full relative"
       >
         {mode === 'add' && (
@@ -225,7 +231,7 @@ const EventModal = ({
           </>
         )}
       </motion.div>
-    </div>
+    </motion.div>
   )
 }
 
