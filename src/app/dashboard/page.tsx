@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Plus, X, Trash2 } from "lucide-react"
+import { Plus, X, Trash2, LinkIcon, Building, Users } from "lucide-react"
 import Image from "next/image"
 import { Yatra_One } from "next/font/google"
 import { supabase } from "../../../lib/supabase"
@@ -14,12 +14,15 @@ const yatraOne = Yatra_One({
 }) as { className: string }
 
 interface EventType {
-  id: string
-  title: string
-  event_date: string
-  location: string
-  expires_on: string
-  image_url: string
+  id: string;
+  title: string;
+  event_date: string;
+  location: string;
+  expires_on: string;
+  image_url: string;
+  registration_link?: string;  // Making these optional with '?' since they might not exist in older records
+  organizer_name?: string;
+  organizing_company?: string;
 }
 
 const Dashboard = () => {
@@ -55,45 +58,51 @@ const Dashboard = () => {
     location: string
     expires_on: string
     image: File | null
-  }) => {
+    registration_link: string
+    organizer_name: string
+    organizing_company: string
+}) => {
     try {
-      let image_url = '/placeholder.svg'
-      
-      if (formData.image) {
-        const fileExt = formData.image.name.split('.').pop()
-        const fileName = `${Math.random()}.${fileExt}`
+        let image_url = '/placeholder.svg'
         
-        const { error: uploadError } = await supabase.storage
-          .from('event-images')
-          .upload(fileName, formData.image)
-        
-        if (!uploadError) {
-          const { data: { publicUrl } } = supabase.storage
-            .from('event-images')
-            .getPublicUrl(fileName)
-          
-          image_url = publicUrl
+        if (formData.image) {
+            const fileExt = formData.image.name.split('.').pop()
+            const fileName = `${Math.random()}.${fileExt}`
+            
+            const { error: uploadError } = await supabase.storage
+                .from('event-images')
+                .upload(fileName, formData.image)
+            
+            if (!uploadError) {
+                const { data: { publicUrl } } = supabase.storage
+                    .from('event-images')
+                    .getPublicUrl(fileName)
+                
+                image_url = publicUrl
+            }
         }
-      }
 
-      const { error } = await supabase
-        .from('events')
-        .insert({
-          title: formData.title,
-          event_date: formData.event_date,
-          location: formData.location,
-          expires_on: formData.expires_on,
-          image_url
-        })
+        const { error } = await supabase
+            .from('events')
+            .insert({
+                title: formData.title,
+                event_date: formData.event_date,
+                location: formData.location,
+                expires_on: formData.expires_on,
+                image_url,
+                registration_link: formData.registration_link,
+                organizer_name: formData.organizer_name,
+                organizing_company: formData.organizing_company
+            })
 
-      if (!error) {
-        await fetchEvents()
-        setIsModalOpen(false)
-      }
+        if (!error) {
+            await fetchEvents()
+            setIsModalOpen(false)
+        }
     } catch (error) {
-      console.error('Error:', error)
+        console.error('Error:', error)
     }
-  }, [])
+}, [])
 
   const handleDeleteEvent = useCallback(async (event: EventType) => {
     try {
@@ -237,7 +246,7 @@ const Dashboard = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-[#1E1E1E] rounded-xl p-6 max-w-md w-full relative"
+                className="bg-[#1E1E1E] rounded-xl p-6 max-w-lg w-full relative max-h-[90vh] overflow-y-auto"
               >
                 <button
                   onClick={() => setSelectedEvent(null)}
@@ -245,34 +254,116 @@ const Dashboard = () => {
                 >
                   <X size={24} />
                 </button>
-                <h2 className={`${yatraOne.className} text-xl font-bold mb-6 bg-gradient-to-r from-white to-[#85472B] bg-clip-text text-transparent`}>
+                
+                {/* Event Title */}
+                <h2 className={`${yatraOne.className} text-2xl font-bold mb-6 bg-gradient-to-r from-white to-[#85472B] bg-clip-text text-transparent pr-8`}>
                   {selectedEvent.title}
                 </h2>
-                <div className="space-y-4">
+
+                {/* Event Image */}
+                <div className="relative aspect-video mb-6">
                   <Image
                     src={selectedEvent.image_url || "/placeholder.svg"}
                     alt={selectedEvent.title}
-                    width={400}
-                    height={300}
-                    className="w-full h-48 object-cover rounded-lg"
+                    width={800}
+                    height={400}
+                    className="w-full rounded-lg object-cover"
                   />
-                  <p><strong>Event Date:</strong> {new Date(selectedEvent.event_date).toLocaleDateString()}</p>
-                  <p><strong>Location:</strong> {selectedEvent.location}</p>
-                  <p><strong>Expires On:</strong> {new Date(selectedEvent.expires_on).toLocaleDateString()}</p>
-                  <div className="flex justify-end mt-6">
-                    <button
-                      onClick={() => handleOpenModal('delete', selectedEvent)}
-                      className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-300"
-                    >
-                      <Trash2 size={16} />
-                      Delete Event
-                    </button>
+                </div>
+
+                {/* Event Details Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  {/* Left Column */}
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <p className="text-gray-400 text-sm">Event Date</p>
+                      <p className="text-white">
+                        {new Date(selectedEvent.event_date).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </p>
+                    </div>
+
+                    <div className="space-y-1">
+                      <p className="text-gray-400 text-sm">Location</p>
+                      <p className="text-white flex items-center gap-2">
+                        📍 {selectedEvent.location}
+                      </p>
+                    </div>
+
+                    <div className="space-y-1">
+                      <p className="text-gray-400 text-sm">Expires On</p>
+                      <p className="text-white">
+                        {new Date(selectedEvent.expires_on).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </p>
+                    </div>
                   </div>
+
+                  {/* Right Column */}
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <p className="text-gray-400 text-sm">Organizer</p>
+                      <p className="text-white flex items-center gap-2">
+                        <Users size={16} className="text-[#85472B]" />
+                        {selectedEvent.organizer_name || 'Not specified'}
+                      </p>
+                    </div>
+
+                    <div className="space-y-1">
+                      <p className="text-gray-400 text-sm">Organizing Company</p>
+                      <p className="text-white flex items-center gap-2">
+                        <Building size={16} className="text-[#85472B]" />
+                        {selectedEvent.organizing_company || 'Not specified'}
+                      </p>
+                    </div>
+
+                    <div className="space-y-1">
+                      <p className="text-gray-400 text-sm">Registration Link</p>
+                      {selectedEvent.registration_link ? (
+                        <a
+                          href={selectedEvent.registration_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#85472B] hover:text-[#6d3a23] flex items-center gap-2 transition-colors duration-300"
+                        >
+                          <LinkIcon size={16} />
+                          Register Here
+                        </a>
+                      ) : (
+                        <p className="text-gray-400">No registration link available</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-end gap-4 mt-6 pt-4 border-t border-white/10">
+                  <button
+                    onClick={() => setSelectedEvent(null)}
+                    className="px-4 py-2 text-gray-400 hover:text-white transition-colors duration-300"
+                  >
+                    Close
+                  </button>
+                  <button
+                    onClick={() => handleOpenModal('delete', selectedEvent)}
+                    className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-300"
+                  >
+                    <Trash2 size={16} />
+                    Delete Event
+                  </button>
                 </div>
               </motion.div>
             </div>
           )}
         </AnimatePresence>
+
       </motion.div>
     </div>
   )

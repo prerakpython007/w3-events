@@ -20,6 +20,9 @@ interface EventModalProps {
     location: string
     expires_on: string
     image: File | null
+    registration_link: string
+    organizer_name: string
+    organizing_company: string
   }) => void
   onConfirmDelete?: () => void
   eventTitle?: string
@@ -40,6 +43,9 @@ const EventModal = ({
     location: "",
     expires_on: "",
     image: null as File | null,
+    registration_link: "",
+    organizer_name: "",
+    organizing_company: ""
   })
 
   const handleImageUpload = useCallback((file: File) => {
@@ -75,6 +81,9 @@ const EventModal = ({
         location: "",
         expires_on: "",
         image: null,
+        registration_link: "",
+        organizer_name: "",
+        organizing_company: ""
       })
     }
   }, [mode, onSubmit, formData])
@@ -109,7 +118,7 @@ const EventModal = ({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-[#1E1E1E] rounded-xl p-6 max-w-md w-full relative"
+        className="bg-[#1E1E1E] rounded-xl p-6 max-w-md w-full relative max-h-[90vh] overflow-y-auto"
       >
         {mode === 'add' && (
           <>
@@ -162,6 +171,43 @@ const EventModal = ({
               </div>
 
               <div>
+                <label className="block text-sm text-gray-400 mb-1">Registration Link</label>
+                <input
+                  type="url"
+                  name="registration_link"
+                  value={formData.registration_link}
+                  onChange={handleChange}
+                  placeholder="https://"
+                  className="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#85472B]"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Organizer's Name</label>
+                <input
+                  type="text"
+                  name="organizer_name"
+                  value={formData.organizer_name}
+                  onChange={handleChange}
+                  className="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#85472B]"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Organizing Company</label>
+                <input
+                  type="text"
+                  name="organizing_company"
+                  value={formData.organizing_company}
+                  onChange={handleChange}
+                  className="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#85472B]"
+                  required
+                />
+              </div>
+
+              <div>
                 <label className="block text-sm text-gray-400 mb-1">Expires On</label>
                 <input
                   type="date"
@@ -174,7 +220,7 @@ const EventModal = ({
               </div>
 
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Cover Image</label>
+                <label className="block text-sm text-gray-400 mb-1">Event Banner</label>
                 <div
                   className={`relative border-2 border-dashed rounded-lg transition-all duration-300 ${
                     isDragging ? "border-[#85472B] bg-[#85472B]/10" : "border-white/10 hover:border-[#85472B]"
