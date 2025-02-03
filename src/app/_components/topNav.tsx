@@ -5,6 +5,7 @@ import { Saira, Yatra_One } from 'next/font/google'
 import { LayoutDashboard, Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { useAuth } from '@/app/contexts/authContext' // Add this at the top
 
 const saira = Saira({ 
   subsets: ['latin'],
@@ -22,6 +23,7 @@ interface NavbarProps {
 
 const Navbar: FC<NavbarProps> = ({ className }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -77,7 +79,7 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
         initial="hidden"
         animate="visible"
         variants={navVariants}
-        className={`my-5 w-[90%] sm:w-[75%] md:w-[60%] lg:w-[45%] text-[#FFD5C2] mx-auto relative z-50 ${className || ''}`}
+        className={`py-5 w-[90%] sm:w-[75%] md:w-[60%] lg:w-[45%] text-[#FFD5C2] mx-auto relative z-50 ${className || ''}`}
       >
         <div className={`${saira.className} px-4`}>
           <div className="flex justify-between items-center h-16">
@@ -117,13 +119,17 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
                 </Link>
               </motion.div>
             </div>
+            {isLoggedIn && (
+          <motion.div custom={4} variants={linkVariants} className="hidden md:block absolute -right-60">
+            <Link href="/dashboard" className="hover:text-white transition-colors hover:scale-105 inline-flex gap-1 mt-1 items-center">
+              <LayoutDashboard className="w-4 h-4" />
+              Dashboard
+            </Link>
+          </motion.div>
+          
+        )}
 
-            <motion.div custom={4} variants={linkVariants} className="hidden md:block absolute -right-60">
-                <Link href="/dashboard" className="hover:text-white transition-colors hover:scale-105 inline-flex gap-1 mt-1 items-center ">
-                    <LayoutDashboard className="w-4 h-4 " />
-                    Dashboard
-                </Link>
-            </motion.div>
+
 
             <button 
               onClick={toggleMenu}
@@ -166,13 +172,15 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
           >
             Events
           </a>
-          <a 
-            href="/dashboard" 
-            className="text-[#FFD5C2] hover:text-white transition-colors text-2xl"
-            onClick={toggleMenu}
-          >
+          {isLoggedIn && (
+            <a 
+              href="/dashboard" 
+              className="text-[#FFD5C2] hover:text-white transition-colors text-2xl"
+              onClick={toggleMenu}
+            >
               Dashboard
-          </a>
+            </a>
+          )}
           <a 
             href="/submit-event" 
             className="text-[#FFD5C2] hover:text-white transition-colors text-2xl"
