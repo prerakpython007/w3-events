@@ -229,4 +229,4 @@ const EventModal = ({
   )
 }
 
-export default EventModal
+export default EventModal;

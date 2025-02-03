@@ -5,10 +5,7 @@ import { Plus, X, Trash2 } from "lucide-react"
 import Image from "next/image"
 import { Yatra_One } from "next/font/google"
 import { supabase } from "../../../lib/supabase"
-import EventFormModal from "../_components/eventModal"
-import DeleteConfirmationModal from "../_components/eventDeleteModal"
-import EventModal from "../_components/eventModal"
-
+import EventModal from "../_components/EventModal"
 
 const yatraOne = Yatra_One({
   weight: "400",
@@ -26,7 +23,8 @@ interface EventType {
 }
 
 const Dashboard = () => {
-  const [isFormOpen, setIsFormOpen] = useState(false)
+  const [modalMode, setModalMode] = useState<'add' | 'delete'>('add')
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [events, setEvents] = useState<EventType[]>([])
   const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null)
   const [deleteConfirmEvent, setDeleteConfirmEvent] = useState<EventType | null>(null)
@@ -84,7 +82,7 @@ const Dashboard = () => {
 
       if (!error) {
         await fetchEvents()
-        setIsFormOpen(false)
+        setIsModalOpen(false)
       }
     } catch (error) {
       console.error('Error:', error)
@@ -110,13 +108,20 @@ const Dashboard = () => {
         await fetchEvents()
         setDeleteConfirmEvent(null)
         setSelectedEvent(null)
+        setIsModalOpen(false)
       }
     } catch (error) {
       console.error('Error deleting event:', error)
     }
   }
-  const [modalMode, setModalMode] = useState<'add' | 'delete'>('add')
-const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleOpenModal = (mode: 'add' | 'delete', event?: EventType) => {
+    setModalMode(mode)
+    if (mode === 'delete') {
+      setDeleteConfirmEvent(event || null)
+    }
+    setIsModalOpen(true)
+  }
 
   return (
     <div className="min-h-screen text-white p-6">
@@ -126,7 +131,7 @@ const [isModalOpen, setIsModalOpen] = useState(false)
             Event Dashboard
           </h1>
           <button
-            onClick={() => setIsFormOpen(true)}
+            onClick={() => handleOpenModal('add')}
             className="flex items-center gap-2 bg-[#85472B] hover:bg-[#6d3a23] px-4 py-2 rounded-lg transition-colors duration-300"
           >
             <Plus size={20} />
@@ -175,7 +180,7 @@ const [isModalOpen, setIsModalOpen] = useState(false)
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
-                      setDeleteConfirmEvent(event)
+                      handleOpenModal('delete', event)
                     }}
                     className="text-gray-400 hover:text-red-500 transition-colors duration-300"
                   >
@@ -195,21 +200,17 @@ const [isModalOpen, setIsModalOpen] = useState(false)
           ))}
         </div>
 
-        {/* Modals */}
+        {/* Unified Modal */}
         <EventModal
-      isOpen={isModalOpen}
-      mode={modalMode}
-      onClose={() => setIsModalOpen(false)}
-      onSubmit={handleSubmit}
-      onConfirmDelete={() => deleteConfirmEvent && handleDeleteEvent(deleteConfirmEvent)}
-      eventTitle={deleteConfirmEvent?.title}
-    />
-
-        <DeleteConfirmationModal
-          isOpen={!!deleteConfirmEvent}
-          onClose={() => setDeleteConfirmEvent(null)}
-          onConfirm={() => deleteConfirmEvent && handleDeleteEvent(deleteConfirmEvent)}
-          eventTitle={deleteConfirmEvent?.title || ''}
+          isOpen={isModalOpen}
+          mode={modalMode}
+          onClose={() => {
+            setIsModalOpen(false)
+            setDeleteConfirmEvent(null)
+          }}
+          onSubmit={handleSubmit}
+          onConfirmDelete={() => deleteConfirmEvent && handleDeleteEvent(deleteConfirmEvent)}
+          eventTitle={deleteConfirmEvent?.title}
         />
 
         {/* Event Details Modal */}
@@ -242,7 +243,7 @@ const [isModalOpen, setIsModalOpen] = useState(false)
                 <p><strong>Expires On:</strong> {new Date(selectedEvent.expires_on).toLocaleDateString()}</p>
                 <div className="flex justify-end mt-6">
                   <button
-                    onClick={() => setDeleteConfirmEvent(selectedEvent)}
+                    onClick={() => handleOpenModal('delete', selectedEvent)}
                     className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-300"
                   >
                     <Trash2 size={16} />
