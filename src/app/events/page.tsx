@@ -2,8 +2,9 @@
 import { FC, useRef, useEffect, useState } from "react";
 import { Yatra_One } from 'next/font/google'
 import Image from 'next/image'
-import { motion, useInView, useScroll, useSpring } from 'framer-motion'
+import { motion, useInView, useScroll, useSpring, AnimatePresence } from 'framer-motion'
 import { supabase } from "../../../lib/supabase"
+import EventModal from "../dashboard/components/EventModal";
 
 const yatraOne = Yatra_One({
     weight: '400',
@@ -141,6 +142,7 @@ const EventCategories = ({ events, searchTerm }: { events: Event[], searchTerm: 
 const EventGridd: FC = () => {
     const [events, setEvents] = useState<Event[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const { scrollYProgress } = useScroll();
     const scaleX = useSpring(scrollYProgress, {
         stiffness: 100,
@@ -160,6 +162,58 @@ const EventGridd: FC = () => {
         
         if (data) setEvents(data);
         if (error) console.error('Error:', error);
+    };
+
+    const handleSubmit = async (formData: {
+        title: string;
+        event_date: string;
+        location: string;
+        expires_on: string;
+        image: File | null;
+        registration_link: string;
+        organizer_name: string;
+        organizing_company: string;
+    }) => {
+        try {
+            let image_url = '/placeholder.svg';
+            
+            if (formData.image) {
+                const fileExt = formData.image.name.split('.').pop();
+                const fileName = `${Math.random()}.${fileExt}`;
+                
+                const { error: uploadError } = await supabase.storage
+                    .from('event-images')
+                    .upload(fileName, formData.image);
+                
+                if (!uploadError) {
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('event-images')
+                        .getPublicUrl(fileName);
+                    
+                    image_url = publicUrl;
+                }
+            }
+
+            const { error } = await supabase
+                .from('events')
+                .insert({
+                    title: formData.title,
+                    event_date: formData.event_date,
+                    location: formData.location,
+                    expires_on: formData.expires_on,
+                    image_url,
+                    registration_link: formData.registration_link,
+                    organizer_name: formData.organizer_name,
+                    organizing_company: formData.organizing_company
+                });
+
+            if (!error) {
+                setIsModalOpen(false);
+                await fetchEvents();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     return (
@@ -195,8 +249,6 @@ const EventGridd: FC = () => {
                             Discover events around the world
                         </motion.h1>
                         
-                        
-
                         <motion.div className="w-full py-10 max-w-[280px] sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto px-4 mb-8">
                             <div className="relative group">
                                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent rounded-full blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100"></div>
@@ -216,7 +268,6 @@ const EventGridd: FC = () => {
                         </motion.div>
                     </motion.div>
 
-                    {/* Categorized Events */}
                     <div className="w-full max-w-7xl mx-auto">
                         <EventCategories events={events} searchTerm={searchTerm} />
                     </div>
@@ -233,11 +284,22 @@ const EventGridd: FC = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300"
+                    onClick={() => setIsModalOpen(true)}
                 >
                     Add your event
                 </motion.button>
-                
             </motion.div>
+
+            <AnimatePresence>
+                {isModalOpen && (
+                    <EventModal
+                        isOpen={isModalOpen}
+                        mode="add"
+                        onClose={() => setIsModalOpen(false)}
+                        onSubmit={handleSubmit}
+                    />
+                )}
+            </AnimatePresence>
         </motion.div>
     );
 };

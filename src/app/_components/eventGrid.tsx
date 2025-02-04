@@ -2,10 +2,10 @@
 import { FC, useRef, useEffect, useState } from "react";
 import { Yatra_One } from 'next/font/google'
 import Image from 'next/image'
-import { motion, useInView, useScroll, useSpring } from 'framer-motion'
+import { motion, useInView, useScroll, useSpring, AnimatePresence } from 'framer-motion'
 import { supabase } from "../../../lib/supabase"
-import { Router } from "next/router";
 import Link from "next/link";
+import EventModal from "../dashboard/components/EventModal";
 
 const yatraOne = Yatra_One({
     weight: '400',
@@ -33,26 +33,14 @@ const EventCard: FC<Event & { index: number }> = ({ id, image_url, title, event_
     return (
         <motion.div 
             ref={cardRef}
-            initial={{ 
-                opacity: 0, 
-                y: 15
-            }}
-            animate={isInView ? { 
-                opacity: 1, 
-                y: 0
-            } : { 
-                opacity: 0, 
-                y: 15
-            }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
             transition={{ 
                 duration: 1.2,
                 ease: [0.16, 1, 0.3, 1],
                 delay: index * 0.15,
             }}
-            whileHover={{ 
-                y: -5,
-                transition: { duration: 0.3 }
-            }}
+            whileHover={{ y: -5, transition: { duration: 0.3 } }}
             className="group bg-black/80 backdrop-blur-sm p-3 rounded-xl transform cursor-pointer"
         >
             <div className="relative overflow-hidden rounded-lg">
@@ -102,6 +90,7 @@ const EventCard: FC<Event & { index: number }> = ({ id, image_url, title, event_
 const EventGrid: FC = () => {
     const [events, setEvents] = useState<Event[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const { scrollYProgress } = useScroll();
     const scaleX = useSpring(scrollYProgress, {
         stiffness: 100,
@@ -121,6 +110,58 @@ const EventGrid: FC = () => {
         
         if (data) setEvents(data);
         if (error) console.error('Error:', error);
+    };
+
+    const handleSubmit = async (formData: {
+        title: string;
+        event_date: string;
+        location: string;
+        expires_on: string;
+        image: File | null;
+        registration_link: string;
+        organizer_name: string;
+        organizing_company: string;
+    }) => {
+        try {
+            let image_url = '/placeholder.svg';
+            
+            if (formData.image) {
+                const fileExt = formData.image.name.split('.').pop();
+                const fileName = `${Math.random()}.${fileExt}`;
+                
+                const { error: uploadError } = await supabase.storage
+                    .from('event-images')
+                    .upload(fileName, formData.image);
+                
+                if (!uploadError) {
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('event-images')
+                        .getPublicUrl(fileName);
+                    
+                    image_url = publicUrl;
+                }
+            }
+
+            const { error } = await supabase
+                .from('events')
+                .insert({
+                    title: formData.title,
+                    event_date: formData.event_date,
+                    location: formData.location,
+                    expires_on: formData.expires_on,
+                    image_url,
+                    registration_link: formData.registration_link,
+                    organizer_name: formData.organizer_name,
+                    organizing_company: formData.organizing_company
+                });
+
+            if (!error) {
+                setIsModalOpen(false);
+                await fetchEvents();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     const filteredEvents = events.filter(event =>
@@ -171,8 +212,7 @@ const EventGrid: FC = () => {
                             className={`
                                 ${yatraOne.className}
                                 text-2xl sm:text-3xl md:text-4xl lg:text-4xl
-                                font-bold
-                                text-transparent bg-clip-text
+                                font-bold text-transparent bg-clip-text
                                 bg-gradient-to-r from-white to-[#85472B]
                                 px-4
                             `}
@@ -206,8 +246,7 @@ const EventGrid: FC = () => {
                                     text-sm sm:text-base md:text-lg
                                     bg-black/30 backdrop-blur-md
                                     border border-white/10 hover:border-white/20
-                                    rounded-full 
-                                    text-white placeholder-gray-400 
+                                    rounded-full text-white placeholder-gray-400 
                                     outline-none focus:ring-1 focus:ring-white/30
                                     transition-all duration-300
                                     shadow-lg shadow-black/20"
@@ -244,21 +283,32 @@ const EventGrid: FC = () => {
                 <motion.button 
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsModalOpen(true)}
                     className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300"
                 >
                     Add your event
                 </motion.button>
                 <Link href="/events">
-                <motion.button 
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    
-                    className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300"
-                >
-                    View more
-                </motion.button>
+                    <motion.button 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300"
+                    >
+                        View more
+                    </motion.button>
                 </Link>
             </motion.div>
+
+            <AnimatePresence>
+                {isModalOpen && (
+                    <EventModal
+                        isOpen={isModalOpen}
+                        mode="add"
+                        onClose={() => setIsModalOpen(false)}
+                        onSubmit={handleSubmit}
+                    />
+                )}
+            </AnimatePresence>
         </motion.div>
     );
 };

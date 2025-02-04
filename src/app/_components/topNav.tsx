@@ -1,11 +1,12 @@
 "use client"
-
 import { type FC, useState, useEffect } from 'react'
 import { Saira, Yatra_One } from 'next/font/google'
 import { LayoutDashboard, Menu, X } from 'lucide-react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { useAuth } from '@/app/contexts/authContext' // Add this at the top
+import { motion, AnimatePresence } from 'framer-motion'
+import { useAuth } from '@/app/contexts/authContext'
+import EventModal from '../dashboard/components/EventModal'
+import { supabase } from '../../../lib/supabase'
 
 const saira = Saira({ 
   subsets: ['latin'],
@@ -23,6 +24,7 @@ interface NavbarProps {
 
 const Navbar: FC<NavbarProps> = ({ className }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const { isLoggedIn } = useAuth();
 
   useEffect(() => {
@@ -37,9 +39,58 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
     }
   }, [isMenuOpen])
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
-  }
+  const handleSubmit = async (formData: {
+    title: string;
+    event_date: string;
+    location: string;
+    expires_on: string;
+    image: File | null;
+    registration_link: string;
+    organizer_name: string;
+    organizing_company: string;
+  }) => {
+    try {
+      let image_url = '/placeholder.svg';
+      
+      if (formData.image) {
+        const fileExt = formData.image.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('event-images')
+          .upload(fileName, formData.image);
+        
+        if (!uploadError) {
+          const { data: { publicUrl } } = supabase.storage
+            .from('event-images')
+            .getPublicUrl(fileName);
+          
+          image_url = publicUrl;
+        }
+      }
+
+      const { error } = await supabase
+        .from('events')
+        .insert({
+          title: formData.title,
+          event_date: formData.event_date,
+          location: formData.location,
+          expires_on: formData.expires_on,
+          image_url,
+          registration_link: formData.registration_link,
+          organizer_name: formData.organizer_name,
+          organizing_company: formData.organizing_company
+        });
+
+      if (!error) {
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const navVariants = {
     hidden: { y: -20, opacity: 0 },
@@ -114,22 +165,23 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
                 </Link>
               </motion.div>
               <motion.div custom={3} variants={linkVariants}>
-                <Link href="/submit-event" className="hover:text-white transition-colors hover:scale-105 inline-block whitespace-nowrap">
+                <button 
+                  onClick={() => setIsModalOpen(true)} 
+                  className="hover:text-white transition-colors hover:scale-105 inline-block whitespace-nowrap"
+                >
                   Submit event
-                </Link>
+                </button>
               </motion.div>
             </div>
+
             {isLoggedIn && (
-          <motion.div custom={4} variants={linkVariants} className="hidden md:block absolute -right-60">
-            <Link href="/dashboard" className="hover:text-white transition-colors hover:scale-105 inline-flex gap-1 mt-1 items-center">
-              <LayoutDashboard className="w-4 h-4" />
-              Dashboard
-            </Link>
-          </motion.div>
-          
-        )}
-
-
+              <motion.div custom={4} variants={linkVariants} className="hidden md:block absolute -right-60">
+                <Link href="/dashboard" className="hover:text-white transition-colors hover:scale-105 inline-flex gap-1 mt-1 items-center">
+                  <LayoutDashboard className="w-4 h-4" />
+                  Dashboard
+                </Link>
+              </motion.div>
+            )}
 
             <button 
               onClick={toggleMenu}
@@ -181,15 +233,28 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
               Dashboard
             </a>
           )}
-          <a 
-            href="/submit-event" 
+          <button 
+            onClick={() => {
+              toggleMenu();
+              setIsModalOpen(true);
+            }}
             className="text-[#FFD5C2] hover:text-white transition-colors text-2xl"
-            onClick={toggleMenu}
           >
             Submit event
-          </a>
+          </button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {isModalOpen && (
+          <EventModal
+            isOpen={isModalOpen}
+            mode="add"
+            onClose={() => setIsModalOpen(false)}
+            onSubmit={handleSubmit}
+          />
+        )}
+      </AnimatePresence>
     </>
   )
 }

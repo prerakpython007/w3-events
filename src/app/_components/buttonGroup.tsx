@@ -1,15 +1,18 @@
-// components/ButtonGroup.tsx
 "use client"
 import { FC, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "../../../lib/supabase";
 import SocialModal from "./socialModal";
+import EventModal from "../dashboard/components/EventModal";
 
 interface ButtonGroupProps {
   scrollToEvents: () => void;
+  onEventAdded?: () => void;
 }
 
-const ButtonGroup: FC<ButtonGroupProps> = ({ scrollToEvents }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const ButtonGroup: FC<ButtonGroupProps> = ({ scrollToEvents, onEventAdded }) => {
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+  const [isSocialModalOpen, setIsSocialModalOpen] = useState(false);
 
   const buttonVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -24,11 +27,63 @@ const ButtonGroup: FC<ButtonGroupProps> = ({ scrollToEvents }) => {
     })
   };
 
+  const handleSubmit = async (formData: {
+    title: string;
+    event_date: string;
+    location: string;
+    expires_on: string;
+    image: File | null;
+    registration_link: string;
+    organizer_name: string;
+    organizing_company: string;
+  }) => {
+    try {
+      let image_url = '/placeholder.svg';
+      
+      if (formData.image) {
+        const fileExt = formData.image.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('event-images')
+          .upload(fileName, formData.image);
+        
+        if (!uploadError) {
+          const { data: { publicUrl } } = supabase.storage
+            .from('event-images')
+            .getPublicUrl(fileName);
+          
+          image_url = publicUrl;
+        }
+      }
+
+      const { error } = await supabase
+        .from('events')
+        .insert({
+          title: formData.title,
+          event_date: formData.event_date,
+          location: formData.location,
+          expires_on: formData.expires_on,
+          image_url,
+          registration_link: formData.registration_link,
+          organizer_name: formData.organizer_name,
+          organizing_company: formData.organizing_company
+        });
+
+      if (!error) {
+        setIsEventModalOpen(false);
+        if (onEventAdded) onEventAdded();
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   const buttons = [
     {
       text: "Joint Our Community",
       className: "border-[#2E2E2E] border-2 p-2 rounded-md hover:border-gray-500 transition-all duration-300",
-      onClick: () => setIsModalOpen(true)
+      onClick: () => setIsSocialModalOpen(true)
     },
     {
       text: "Explore Events",
@@ -38,7 +93,7 @@ const ButtonGroup: FC<ButtonGroupProps> = ({ scrollToEvents }) => {
     {
       text: "Submit Your Event",
       className: "border-[#2E2E2E] border-2 p-2 rounded-md hover:border-gray-500 transition-all duration-300",
-      onClick: () => window.location.href = '/submit-event'
+      onClick: () => setIsEventModalOpen(true)
     }
   ];
 
@@ -64,10 +119,18 @@ const ButtonGroup: FC<ButtonGroupProps> = ({ scrollToEvents }) => {
       </div>
 
       <AnimatePresence>
-        {isModalOpen && (
+        {isSocialModalOpen && (
           <SocialModal
-            isOpen={isModalOpen} 
-            onClose={() => setIsModalOpen(false)} 
+            isOpen={isSocialModalOpen} 
+            onClose={() => setIsSocialModalOpen(false)} 
+          />
+        )}
+        {isEventModalOpen && (
+          <EventModal
+            isOpen={isEventModalOpen}
+            mode="add"
+            onClose={() => setIsEventModalOpen(false)}
+            onSubmit={handleSubmit}
           />
         )}
       </AnimatePresence>
