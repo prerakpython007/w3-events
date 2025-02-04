@@ -4,6 +4,8 @@ import { Yatra_One } from 'next/font/google'
 import Image from 'next/image'
 import { motion, useInView, useScroll, useSpring } from 'framer-motion'
 import { supabase } from "../../../lib/supabase"
+import { Router } from "next/router";
+import Link from "next/link";
 
 const yatraOne = Yatra_One({
     weight: '400',
@@ -246,13 +248,16 @@ const EventGrid: FC = () => {
                 >
                     Add your event
                 </motion.button>
+                <Link href="/events">
                 <motion.button 
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    
                     className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300"
                 >
                     View more
                 </motion.button>
+                </Link>
             </motion.div>
         </motion.div>
     );
