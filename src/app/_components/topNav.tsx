@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '@/app/contexts/authContext'
 import EventModal from '../dashboard/components/EventModal'
 import { supabase } from '../../../lib/supabase'
+import Image from 'next/image'
 
 const saira = Saira({ 
   subsets: ['latin'],
@@ -152,9 +153,13 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
               className="flex-1 text-center"
             >
               <Link href="/" className="inline-block">
-                <h1 className={`${yatraOne.className} text-2xl text-white hover:scale-105 transition-transform`}>
-                  Web3Events
-                </h1>
+                <Image
+                  src="/logonew.png"
+                  alt="Logo"
+                  width={150}
+                  height={40}
+                  layout="fixed"
+                />
               </Link>
             </motion.div>
 

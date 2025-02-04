@@ -224,9 +224,9 @@ const Dashboard = () => {
                     className="text-gray-400 hover:text-[#85472B] transition-colors duration-300"
                   >
                     {event.is_active ? (
-                      <ToggleRight size={20} className="text-[#85472B]" />
+                      <ToggleRight size={30} className="text-[#85472B]" />
                     ) : (
-                      <ToggleLeft size={20} />
+                      <ToggleLeft size={30} />
                     )}
                   </button>
                   <p className="text-xs text-white/70">{new Date(event.event_date).toLocaleDateString()}</p>

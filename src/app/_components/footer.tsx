@@ -77,13 +77,24 @@ const Footer = () => {
           </div>
 
           {/* Footer Text */}
-          <div className="text-sm text-[#646464] col-span-1 md:col-span-2 space-y-4 text-center md:text-left">
+          <div className="text-sm  lg:flex lg:space-x-[500px] text-[#646464] col-span-1 md:col-span-2 space-y-4 text-center md:text-left">
+            <div className='lg:w-[70%]'>
             <p className="leading-relaxed">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             </p>
             <p className="leading-relaxed">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
             </p>
+            </div>
+            <div>
+              <Image
+                src="/logonew.png"
+                alt="Web3events Logo"
+                width={150}
+                height={50}
+                className="mx-auto lg:mt-0 mt-10"
+              />
+            </div>
           </div>
         </div>
       </div>
