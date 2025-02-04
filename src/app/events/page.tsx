@@ -19,6 +19,10 @@ interface Event {
     location: string;
     expires_on: string;
     image_url: string;
+    is_active: boolean;
+    registration_link?: string;
+    organizer_name?: string;
+    organizing_company?: string;
 }
 
 const EventCard: FC<Event & { index: number }> = ({ id, image_url, title, event_date, location, expires_on, index }) => {
@@ -150,19 +154,24 @@ const EventGridd: FC = () => {
         restDelta: 0.001
     });
 
+    const fetchEvents = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('events')
+                .select('*')
+                .eq('is_active', true)  // Only fetch active events
+                .order('created_at', { ascending: false });
+            
+            if (data) setEvents(data as Event[]);
+            if (error) console.error('Error:', error);
+        } catch (error) {
+            console.error('Error fetching events:', error);
+        }
+    };
+
     useEffect(() => {
         fetchEvents();
     }, []);
-
-    const fetchEvents = async () => {
-        const { data, error } = await supabase
-            .from('events')
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (data) setEvents(data);
-        if (error) console.error('Error:', error);
-    };
 
     const handleSubmit = async (formData: {
         title: string;
@@ -204,7 +213,8 @@ const EventGridd: FC = () => {
                     image_url,
                     registration_link: formData.registration_link,
                     organizer_name: formData.organizer_name,
-                    organizing_company: formData.organizing_company
+                    organizing_company: formData.organizing_company,
+                    is_active: true  // Set new events as active by default
                 });
 
             if (!error) {

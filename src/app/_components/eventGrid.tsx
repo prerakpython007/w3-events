@@ -20,6 +20,10 @@ interface Event {
     location: string;
     expires_on: string;
     image_url: string;
+    is_active: boolean;
+    registration_link?: string;
+    organizer_name?: string;
+    organizing_company?: string;
 }
 
 const EventCard: FC<Event & { index: number }> = ({ id, image_url, title, event_date, location, expires_on, index }) => {
@@ -98,19 +102,24 @@ const EventGrid: FC = () => {
         restDelta: 0.001
     });
 
+    const fetchEvents = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('events')
+                .select('*')
+                .eq('is_active', true)  // Only fetch active events
+                .order('created_at', { ascending: false });
+            
+            if (data) setEvents(data as Event[]);
+            if (error) console.error('Error:', error);
+        } catch (error) {
+            console.error('Error fetching events:', error);
+        }
+    };
+
     useEffect(() => {
         fetchEvents();
     }, []);
-
-    const fetchEvents = async () => {
-        const { data, error } = await supabase
-            .from('events')
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (data) setEvents(data);
-        if (error) console.error('Error:', error);
-    };
 
     const handleSubmit = async (formData: {
         title: string;
@@ -152,7 +161,8 @@ const EventGrid: FC = () => {
                     image_url,
                     registration_link: formData.registration_link,
                     organizer_name: formData.organizer_name,
-                    organizing_company: formData.organizing_company
+                    organizing_company: formData.organizing_company,
+                    is_active: true  // Set new events as active by default
                 });
 
             if (!error) {
@@ -209,13 +219,7 @@ const EventGrid: FC = () => {
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.3 }}
-                            className={`
-                                ${yatraOne.className}
-                                text-2xl sm:text-3xl md:text-4xl lg:text-4xl
-                                font-bold text-transparent bg-clip-text
-                                bg-gradient-to-r from-white to-[#85472B]
-                                px-4
-                            `}
+                            className={`${yatraOne.className} text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-[#85472B] px-4`}
                         >
                             Discover events around the world
                         </motion.h1>
@@ -242,14 +246,7 @@ const EventGrid: FC = () => {
                                     placeholder="Search for events"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full py-2.5 sm:py-3.5 md:py-4 pl-12 pr-4 sm:pl-14 sm:pr-6
-                                    text-sm sm:text-base md:text-lg
-                                    bg-black/30 backdrop-blur-md
-                                    border border-white/10 hover:border-white/20
-                                    rounded-full text-white placeholder-gray-400 
-                                    outline-none focus:ring-1 focus:ring-white/30
-                                    transition-all duration-300
-                                    shadow-lg shadow-black/20"
+                                    className="w-full py-2.5 sm:py-3.5 md:py-4 pl-12 pr-4 sm:pl-14 sm:pr-6 text-sm sm:text-base md:text-lg bg-black/30 backdrop-blur-md border border-white/10 hover:border-white/20 rounded-full text-white placeholder-gray-400 outline-none focus:ring-1 focus:ring-white/30 transition-all duration-300 shadow-lg shadow-black/20"
                                 />
                                 <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2">
                                     <svg 

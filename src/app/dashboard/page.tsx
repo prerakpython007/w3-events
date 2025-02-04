@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Plus, X, Trash2, LinkIcon, Building, Users } from "lucide-react"
+import { Plus, X, Trash2, LinkIcon, Building, Users, ToggleLeft, ToggleRight } from "lucide-react"
 import Image from "next/image"
 import { Yatra_One } from "next/font/google"
 import { supabase } from "../../../lib/supabase"
@@ -20,9 +20,10 @@ interface EventType {
   location: string;
   expires_on: string;
   image_url: string;
-  registration_link?: string;  // Making these optional with '?' since they might not exist in older records
+  registration_link?: string;
   organizer_name?: string;
   organizing_company?: string;
+  is_active: boolean;  // New field
 }
 
 const Dashboard = () => {
@@ -49,6 +50,21 @@ const Dashboard = () => {
       if (error) console.error('Error:', error)
     } catch (error) {
       console.error('Error fetching events:', error)
+    }
+  }
+
+  const toggleEventStatus = async (event: EventType) => {
+    try {
+      const { error } = await supabase
+        .from('events')
+        .update({ is_active: !event.is_active })
+        .eq('id', event.id)
+
+      if (!error) {
+        await fetchEvents()
+      }
+    } catch (error) {
+      console.error('Error toggling event status:', error)
     }
   }
 
@@ -92,7 +108,8 @@ const Dashboard = () => {
                 image_url,
                 registration_link: formData.registration_link,
                 organizer_name: formData.organizer_name,
-                organizing_company: formData.organizing_company
+                organizing_company: formData.organizing_company,
+                is_active: true  // New events are active by default
             })
 
         if (!error) {
@@ -168,7 +185,9 @@ const Dashboard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="group bg-black/80 backdrop-blur-sm p-3 rounded-xl transform relative"
+              className={`group bg-black/80 backdrop-blur-sm p-3 rounded-xl transform relative ${
+                !event.is_active ? 'opacity-60' : ''
+              }`}
               whileHover={{ y: -5 }}
             >
               <div 
@@ -197,6 +216,19 @@ const Dashboard = () => {
                   {event.title}
                 </p>
                 <div className="flex items-center gap-3">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      toggleEventStatus(event)
+                    }}
+                    className="text-gray-400 hover:text-[#85472B] transition-colors duration-300"
+                  >
+                    {event.is_active ? (
+                      <ToggleRight size={20} className="text-[#85472B]" />
+                    ) : (
+                      <ToggleLeft size={20} />
+                    )}
+                  </button>
                   <p className="text-xs text-white/70">{new Date(event.event_date).toLocaleDateString()}</p>
                   <button
                     onClick={(e) => {
@@ -215,6 +247,9 @@ const Dashboard = () => {
                 </p>
                 <p className="text-xs text-[#ABABAB] group-hover:text-white/90 transition-colors duration-300">
                   Expires: {new Date(event.expires_on).toLocaleDateString()}
+                </p>
+                <p className="text-xs text-[#ABABAB] mt-1">
+                  Status: {event.is_active ? 'Active' : 'Inactive'}
                 </p>
               </motion.div>
             </motion.div>
@@ -345,6 +380,7 @@ const Dashboard = () => {
 
                 {/* Action Buttons */}
                 <div className="flex justify-end gap-4 mt-6 pt-4 border-t border-white/10">
+                
                   <button
                     onClick={() => setSelectedEvent(null)}
                     className="px-4 py-2 text-gray-400 hover:text-white transition-colors duration-300"
