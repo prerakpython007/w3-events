@@ -1,12 +1,16 @@
+// components/ButtonGroup.tsx
 "use client"
-import { FC } from "react";
-import { motion } from "framer-motion";
+import { FC, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import SocialModal from "./socialModal";
 
 interface ButtonGroupProps {
   scrollToEvents: () => void;
 }
 
 const ButtonGroup: FC<ButtonGroupProps> = ({ scrollToEvents }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const buttonVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
@@ -24,7 +28,7 @@ const ButtonGroup: FC<ButtonGroupProps> = ({ scrollToEvents }) => {
     {
       text: "Joint Our Community",
       className: "border-[#2E2E2E] border-2 p-2 rounded-md hover:border-gray-500 transition-all duration-300",
-      onClick: () => window.open('https://discord.gg/yourserver', '_blank')
+      onClick: () => setIsModalOpen(true)
     },
     {
       text: "Explore Events",
@@ -39,24 +43,35 @@ const ButtonGroup: FC<ButtonGroupProps> = ({ scrollToEvents }) => {
   ];
 
   return (
-    <div className="button-group flex lg:mt-10 flex-col sm:flex-row gap-3">
-      {buttons.map((button, index) => (
-        <motion.button
-          key={button.text}
-          custom={index}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={buttonVariants}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className={button.className}
-          onClick={button.onClick}
-        >
-          {button.text}
-        </motion.button>
-      ))}
-    </div>
+    <>
+      <div className="button-group flex lg:mt-10 flex-col sm:flex-row gap-3">
+        {buttons.map((button, index) => (
+          <motion.button
+            key={button.text}
+            custom={index}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={buttonVariants}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className={button.className}
+            onClick={button.onClick}
+          >
+            {button.text}
+          </motion.button>
+        ))}
+      </div>
+
+      <AnimatePresence>
+        {isModalOpen && (
+          <SocialModal
+            isOpen={isModalOpen} 
+            onClose={() => setIsModalOpen(false)} 
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 

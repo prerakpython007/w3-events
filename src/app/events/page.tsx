@@ -236,13 +236,7 @@ const EventGridd: FC = () => {
                 >
                     Add your event
                 </motion.button>
-                <motion.button 
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300"
-                >
-                    View more
-                </motion.button>
+                
             </motion.div>
         </motion.div>
     );
