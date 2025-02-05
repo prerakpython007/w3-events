@@ -38,7 +38,7 @@ export default function Home() {
   };
 
   return (
-    <div className="grid min-h-screen w-full px-4 mt-24 lg:mt-32 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-20 pb-12 sm:pb-16 lg:pb-20 items-center justify-items-center  font-[family-name:var(--font-geist-sans)]">
+    <div className="grid min-h-screen w-full px-4 mt-24 lg:mt-32 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-10 pb-12 sm:pb-16 lg:pb-20 items-center justify-items-center  font-[family-name:var(--font-geist-sans)]">
       <motion.h1 
   initial="hidden"
   whileInView="visible"
@@ -81,10 +81,11 @@ export default function Home() {
   }}
   className={`
     ${yatraOne.className} 
-    text-3xl sm:text-4xl md:text-5xl lg:text-[60px]
+    text-3xl sm:text-4xl md:text-5xl lg:text-[80px]
     text-center 
     text-transparent 
     leading-normal sm:leading-relaxed lg:leading-[70px] 
+    py-3
     bg-clip-text 
     bg-gradient-to-br from-[#FFFFFF] to-[#85472B]
     [text-shadow:0_0_15px_rgba(255,255,255,0.8),0_0_30px_rgba(255,255,255,0.6),0_0_40px_rgba(133,71,43,0.4)]
@@ -94,10 +95,10 @@ export default function Home() {
     WebkitTextFillColor: "transparent"
   }}
 >
-  Join the <br className="md:hidden" /> Web3 Revolution
+You shape Web3 ,   <br className="" /> Web3 shapes you
 </motion.h1>
-      
-      
+
+
       
       
       <ButtonGroup scrollToEvents={scrollToEvents} />

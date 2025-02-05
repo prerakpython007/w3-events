@@ -1,7 +1,10 @@
 "use client"
 import { motion } from "framer-motion";
 import { Facebook } from 'lucide-react';
+import Image from "next/image";
 import { useEffect } from 'react';
+import { FaWhatsapp } from "react-icons/fa";
+import { RiTelegram2Line } from "react-icons/ri";
 
 const XLogo = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6" fill="white">
@@ -103,41 +106,45 @@ const SocialModal = ({ isOpen, onClose }: CommunityModalProps) => {
         </div>
 
         <div className="flex gap-3 sm:gap-4 md:gap-6 items-center justify-center">
-          <a 
-            href="#" 
-            className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#DA5B23] rounded-full"
-            aria-label="Follow us on X"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <div className="border-2 border-[#4E2616] hover:border-[#DA5B23] hover:bg-[#DA5B23] bg-[#0C0C0C] p-3 sm:p-4 rounded-full relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 flex items-center justify-center transition-all duration-300">
-              <XLogo />
-            </div>
-          </a>
-          
-          <a 
-            href="#" 
-            className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#DA5B23] rounded-full"
-            aria-label="Follow us on Facebook"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <div className="border-2 border-[#4E2616] hover:border-[#DA5B23] hover:bg-[#DA5B23] bg-[#0C0C0C] p-3 sm:p-4 rounded-full relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 flex items-center justify-center transition-all duration-300">
-              <Facebook className="w-5 h-5 md:w-6 md:h-6 text-white" />
-            </div>
-          </a>
-          
-          <a 
-            href="#" 
-            className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#DA5B23] rounded-full"
-            aria-label="Follow us on LinkedIn"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <div className="border-2 border-[#4E2616] hover:border-[#DA5B23] hover:bg-[#DA5B23] bg-[#0C0C0C] p-3 sm:p-4 rounded-full relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 flex items-center justify-center transition-all duration-300">
-              <LinkedInLogo />
-            </div>
-          </a>
+         <a 
+                  href="#" 
+                  className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full"
+                  aria-label="Follow us on X"
+                >
+                  <div className=" border-2 border-orange-600 hover:border-orange-600 hover:bg-orange-600 bg-orange-50 bg-opacity-10 p-4 rounded-full relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-colors duration-300">
+                    <XLogo />
+                  </div>
+                </a>
+                
+                <a 
+                  href="#" 
+                  className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2  focus:ring-orange-400 rounded-full"
+                  aria-label="Follow us on Facebook"
+                >
+                  <div className=" border-2 border-orange-600 hover:border-orange-600 hover:bg-orange-600 bg-orange-50 bg-opacity-10 p-4 rounded-full relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-colors duration-300">
+                  <RiTelegram2Line  className="w-6 h-6 text-white" />
+                  </div>
+                </a>
+                
+                <a 
+                  href="#" 
+                  className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full"
+                  aria-label="Follow us on LinkedIn"
+                >
+                  <div className=" border-2 border-orange-600 hover:border-orange-600 hover:bg-orange-600 bg-orange-50 bg-opacity-10 p-4 rounded-full relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-colors duration-300">
+                  <FaWhatsapp className='w-6 h-6 text-white' />
+                  </div>
+                </a>
+                <a 
+                  href="#" 
+                  className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full"
+                  aria-label="Follow us on LinkedIn"
+                >
+                  <div className=" border-2 border-orange-600 hover:border-orange-600 hover:bg-orange-600 bg-orange-50 bg-opacity-10 p-4 rounded-full relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-colors duration-300">
+                        
+                  <Image src={'/vector4.svg'} width={100} alt='logo' className='invert' quality={100}  height={100} />
+                  </div>
+                </a>
         </div>
 
         <div className="mt-4 sm:mt-6 md:mt-8 text-center">

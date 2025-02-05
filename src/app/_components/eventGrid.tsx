@@ -252,13 +252,38 @@ useEffect(() => {
                         className="w-full max-w-4xl mx-auto text-center space-y-4 mt-4 sm:mt-6 md:mt-8 lg:mt-10"
                     >
                         <motion.h1 
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.3 }}
-                            className={`${yatraOne.className} text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-[#85472B] px-4`}
-                        >
-                            Discover events around the world
-                        </motion.h1>
+  initial={{ opacity: 0, y: -20 }}
+  animate={{ 
+    opacity: 1, 
+    y: 0,
+    textShadow: [
+      "0 0 20px rgba(255,255,255,0.8)",
+      "0 0 10px rgba(255,255,255,0.4)",
+      "0 0 20px rgba(255,255,255,0.8)"
+    ]
+  }}
+  whileHover={{ scale: 1.02 }}
+  transition={{ 
+    duration: 0.8,
+    textShadow: {
+      duration: 2,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  }}
+  className={`
+    ${yatraOne.className} 
+    text-2xl sm:text-3xl md:text-4xl lg:text-4xl 
+    font-bold 
+    text-transparent 
+    bg-clip-text 
+    bg-gradient-to-r from-white via-[#FFDCB5] to-[#85472B]
+    px-4
+    tracking-wide
+  `}
+>
+  Discover events around the world
+</motion.h1>
                         
                         <motion.p 
                             initial={{ opacity: 0 }}
