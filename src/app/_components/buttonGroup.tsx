@@ -99,7 +99,7 @@ const ButtonGroup: FC<ButtonGroupProps> = ({ scrollToEvents, onEventAdded }) => 
 
   return (
     <>
-      <div className="button-group flex lg:mt-10 flex-col sm:flex-row gap-3">
+      <div className="button-group flex lg:mt-10 flex-col space-x-4 sm:flex-row gap-3">
         {buttons.map((button, index) => (
           <motion.button
             key={button.text}

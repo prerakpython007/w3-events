@@ -37,6 +37,7 @@ const EventModal = ({
   eventTitle 
 }: EventModalProps) => {
   const [isDragging, setIsDragging] = useState(false)
+  const [dateError, setDateError] = useState("")
   const [formData, setFormData] = useState({
     title: "",
     event_date: "",
@@ -47,6 +48,21 @@ const EventModal = ({
     organizer_name: "",
     organizing_company: ""
   })
+
+  const validateDates = useCallback(() => {
+    const eventDate = new Date(formData.event_date)
+    
+    // Reset error state
+    setDateError("")
+    
+    // Only check if expiry date is before event date
+    if (new Date(formData.expires_on) < eventDate) {
+      setDateError("Expiry date must be after or equal to the event date")
+      return false
+    }
+    
+    return true
+}, [formData.event_date, formData.expires_on])
 
   const handleImageUpload = useCallback((file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -68,25 +84,38 @@ const EventModal = ({
       handleImageUpload(files[0])
     } else {
       setFormData(prev => ({ ...prev, [name]: value }))
+      // Clear date error when dates are modified
+      if (name === "event_date" || name === "expires_on") {
+        setDateError("")
+      }
     }
   }, [handleImageUpload])
 
-  const handleSubmit = useCallback((e: FormEvent) => {
-    e.preventDefault()
-    if (mode === 'add' && onSubmit) {
-      onSubmit(formData)
-      setFormData({
-        title: "",
-        event_date: "",
-        location: "",
-        expires_on: "",
-        image: null,
-        registration_link: "",
-        organizer_name: "",
-        organizing_company: ""
-      })
+  // In the EventModal component, remove or modify validateDates:
+const handleSubmit = useCallback((e: FormEvent) => {
+  e.preventDefault()
+  
+  if (mode === 'add' && onSubmit) {
+    // Format dates for Supabase
+    const formattedData = {
+      ...formData,
+      event_date: new Date(formData.event_date).toISOString(),
+      expires_on: new Date(formData.expires_on).toISOString()
     }
-  }, [mode, onSubmit, formData])
+    
+    onSubmit(formattedData)
+    setFormData({
+      title: "",
+      event_date: "",
+      location: "",
+      expires_on: "",
+      image: null,
+      registration_link: "",
+      organizer_name: "",
+      organizing_company: ""
+    })
+  }
+}, [mode, onSubmit, formData])
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -134,6 +163,12 @@ const EventModal = ({
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {dateError && (
+                <div className="bg-red-500/10 border border-red-500 rounded-lg p-3 text-red-500 text-sm">
+                  {dateError}
+                </div>
+              )}
+              
               <div>
                 <label className="block text-sm text-gray-400 mb-1">Event Title</label>
                 <input
@@ -153,6 +188,7 @@ const EventModal = ({
                   name="event_date"
                   value={formData.event_date}
                   onChange={handleChange}
+                  min={new Date().toISOString().split('T')[0]}
                   className="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#85472B] calendar-icon-white"
                   required
                 />
@@ -208,15 +244,15 @@ const EventModal = ({
               </div>
 
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Expires On</label>
-                <input
-                  type="date"
-                  name="expires_on"
-                  value={formData.expires_on}
-                  onChange={handleChange}
-                  className="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#85472B] calendar-icon-white"
-                  required
-                />
+              <label className="block text-sm text-gray-400 mb-1">Expires On</label>
+  <input
+    type="date"
+    name="expires_on"
+    value={formData.expires_on}
+    onChange={handleChange}
+    className="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#85472B] calendar-icon-white"
+    required
+  />
               </div>
 
               <div>

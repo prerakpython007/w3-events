@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-     <body className={`${saira.className} antialiased bg-[url('/maskgroup.png')] bg-cover bg-center bg-no-repeat relative h-screen`}>
+     <body className={`${saira.className} antialiased bg-[url('/maskgroup.png')] bg-black bg-cover bg-center bg-no-repeat relative h-screen`}>
       <ElegantCursor />
       <AuthProvider>
         <TopNav />

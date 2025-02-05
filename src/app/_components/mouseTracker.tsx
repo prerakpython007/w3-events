@@ -24,30 +24,57 @@ const MorphingCursor = () => {
   }, []);
 
   useEffect(() => {
+    // Add cursor: none to body and html
+    document.body.style.cursor = 'none';
+    document.documentElement.style.cursor = 'none';
+
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
 
     const interactiveElements = document.querySelectorAll('a, button, input[type="submit"], [role="button"]');
+    
+    // Add cursor: none to all interactive elements
     interactiveElements.forEach(element => {
+      (element as HTMLElement).style.cursor = 'none';
       element.addEventListener('mouseenter', () => setIsHovering(true));
       element.addEventListener('mouseleave', () => setIsHovering(false));
     });
 
     return () => {
+      // Reset cursor styles on cleanup
+      document.body.style.cursor = '';
+      document.documentElement.style.cursor = '';
+      
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
       
       interactiveElements.forEach(element => {
+        (element as HTMLElement).style.cursor = '';
         element.removeEventListener('mouseenter', () => setIsHovering(true));
         element.removeEventListener('mouseleave', () => setIsHovering(false));
       });
     };
   }, [handleMouseMove, handleMouseDown, handleMouseUp]);
 
+  // Add a style tag to ensure cursor is hidden everywhere
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      * {
+        cursor: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 pointer-events-none z-50">
+    <div className="fixed inset-0  pointer-events-none z-[200]">
       {/* Outer ring */}
       <div
         className="fixed rounded-full border transition-all duration-300"

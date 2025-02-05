@@ -38,7 +38,7 @@ export default function Home() {
   };
 
   return (
-    <div className="grid min-h-screen w-full px-4 mt-24 lg:mt-32 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-28 pb-12 sm:pb-16 lg:pb-20 items-center justify-items-center font-[family-name:var(--font-geist-sans)]">
+    <div className="grid min-h-screen w-full px-4 mt-24 lg:mt-32 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-20 pb-12 sm:pb-16 lg:pb-20 items-center justify-items-center  font-[family-name:var(--font-geist-sans)]">
       <motion.h1 
   initial="hidden"
   whileInView="visible"
@@ -97,14 +97,8 @@ export default function Home() {
   Join the <br className="md:hidden" /> Web3 Revolution
 </motion.h1>
       
-      <motion.div 
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={fadeInUp}
-        className="pt-2 sm:pt-3 max-w-2xl"
-      >
-      </motion.div>
+      
+      
       
       <ButtonGroup scrollToEvents={scrollToEvents} />
 
@@ -113,7 +107,7 @@ export default function Home() {
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={fadeInUp}
-        className="w-full"
+        className="w-full pt-7"
       >
         <StatsNum />
       </motion.div>

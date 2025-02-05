@@ -44,6 +44,8 @@ const Dashboard = () => {
       const { data, error } = await supabase
         .from('events')
         .select('*')
+        // Remove is_active check here to show all events in dashboard
+        .gt('expires_on', new Date().toISOString())
         .order('created_at', { ascending: false })
       
       if (data) setEvents(data)
@@ -51,7 +53,7 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Error fetching events:', error)
     }
-  }
+}
 
   const toggleEventStatus = async (event: EventType) => {
     try {

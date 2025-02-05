@@ -131,11 +131,11 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
         initial="hidden"
         animate="visible"
         variants={navVariants}
-        className={`py-5 w-[90%] sm:w-[75%] md:w-[60%] lg:w-[45%] text-[#FFD5C2] mx-auto relative z-50 ${className || ''}`}
+        className={`py-7 w-[90%] sm:w-[75%] md:w-[60%] lg:w-[54%] text-[#FFD5C2] mx-auto relative z-50 ${className || ''}`}
       >
-        <div className={`${saira.className} px-4`}>
+        <div className={`${saira.className} px-0`}>
           <div className="flex justify-between items-center h-16">
-            <div className="hidden md:flex items-center space-x-9 flex-1">
+            <div className="hidden md:flex items-center space-x-20 flex-1">
               <motion.div custom={0} variants={linkVariants}>
                 <Link href="/contact" className="hover:text-white transition-colors hover:scale-105 inline-block">
                   Contact us
@@ -163,7 +163,7 @@ const Navbar: FC<NavbarProps> = ({ className }) => {
               </Link>
             </motion.div>
 
-            <div className="hidden md:flex items-center space-x-8 flex-1 justify-end">
+            <div className="hidden md:flex items-center space-x-20 flex-1 justify-end">
               <motion.div custom={2} variants={linkVariants}>
                 <Link href="/events" className="hover:text-white transition-colors hover:scale-105 inline-block">
                   Events

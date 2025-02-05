@@ -102,24 +102,60 @@ const EventGrid: FC = () => {
         restDelta: 0.001
     });
 
-    const fetchEvents = async () => {
-        try {
-            const { data, error } = await supabase
-                .from('events')
-                .select('*')
-                .eq('is_active', true)  // Only fetch active events
-                .order('created_at', { ascending: false });
-            
-            if (data) setEvents(data as Event[]);
-            if (error) console.error('Error:', error);
-        } catch (error) {
-            console.error('Error fetching events:', error);
-        }
-    };
+// In EventGrid component, update the fetchEvents function:
 
-    useEffect(() => {
-        fetchEvents();
-    }, []);
+const fetchEvents = async () => {
+    try {
+        let query = supabase
+            .from('events')
+            .select('*')
+            .eq('is_active', true)  // Only show active events
+            .gt('expires_on', new Date().toISOString())
+            .order('created_at', { ascending: false });
+
+        const { data, error } = await query;
+        
+        if (error) {
+            console.error('Error fetching events:', error);
+            return;
+        }
+
+        if (data) {
+            console.log('Fetched events:', data.length);  // Debug log
+            setEvents(data as Event[]);
+        }
+    } catch (error) {
+        console.error('Error fetching events:', error);
+    }
+};
+
+// Add useEffect to listen for real-time changes
+useEffect(() => {
+    // Initial fetch
+    fetchEvents();
+
+    // Subscribe to changes
+    const channel = supabase
+        .channel('events_changes')
+        .on(
+            'postgres_changes',
+            {
+                event: '*',
+                schema: 'public',
+                table: 'events'
+            },
+            (payload) => {
+                console.log('Database change detected:', payload);
+                fetchEvents();  // Refresh the data
+            }
+        )
+        .subscribe();
+
+    // Cleanup subscription
+    return () => {
+        channel.unsubscribe();
+    };
+}, []);
 
     const handleSubmit = async (formData: {
         title: string;
