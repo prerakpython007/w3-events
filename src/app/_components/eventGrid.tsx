@@ -335,13 +335,22 @@ useEffect(() => {
                             </div>
                         </motion.div>
                     </motion.div>
-                    <div className=" " >
+                    {/* <div className=" " >
                     <div className="  pb-7  grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4   gap-6">
                         {filteredEvents.map((event, index) => (
                             <EventCard key={event.id} {...event} index={index} />
                         ))}
                     </div>
                     
+                    </div> */}
+                    <div className="w-full">
+                    <div className="flex flex-wrap justify-center lg:mb-0 mb-11 gap-6">
+                        {filteredEvents.map((event, index) => (
+                            <div key={event.id} className="w-[300px] ">
+                                <EventCard {...event} index={index} />
+                            </div>
+                        ))}
+                    </div>
                     </div>
                 </div>
             </div>
