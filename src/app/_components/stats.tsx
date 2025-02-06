@@ -27,15 +27,15 @@ const StatsNum: FC = () => {
     ]
 
     return (
-        <div className="w-full px-4 mb-20 sm:mb-12 lg:mb-16">
+        <div className="w-full px-4 mb-20 sm:mb-12 lg:mb-44">
             <motion.div 
-                className="mt-72 sm:mt-40 lg:mt-64"
+                className="mt-72 sm:mt-40 lg:mt-44"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
             >
-                <h1 className={`${yatraOne.className} text-center text-2xl sm:text-3xl md:text-4xl text-white`}>
+                <h1 className={`${yatraOne.className} text-center text-2xl sm:text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFDCB5] to-[#85472B]`}>
                     We&apos;re changing lives
                 </h1>
             </motion.div>

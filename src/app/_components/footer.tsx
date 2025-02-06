@@ -64,9 +64,9 @@ const Footer = () => {
           className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full"
           aria-label="Follow us on LinkedIn"
         >
-          <div className=" border-2 border-orange-600 hover:border-orange-600 hover:bg-orange-600 bg-orange-50 bg-opacity-10 p-4 rounded-full relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-colors duration-300">
+          <div className=" border-2 border-orange-600 hover:border-orange-600 text-3xl hover:bg-orange-600 bg-orange-50 bg-opacity-10 p-4 rounded-full relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-colors duration-300">
                 
-          <Image src={'/vector4.svg'} width={100} alt='logo' className='invert' quality={100}  height={100} />
+          ✦
           </div>
         </a>
       </div>
@@ -95,6 +95,11 @@ const Footer = () => {
             <p className="leading-relaxed">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
             </p>
+            <div className="mt-8">
+                <button className="bg-gradient-to-b from-[#FF4E00] to-[#531900] hover:from-orange-400 hover:to-orange-600 rounded-md transition-all   px-8 py-3  text-white duration-300">
+                  Subscribe
+                </button>
+              </div>
             </div>
             <div>
               <Image

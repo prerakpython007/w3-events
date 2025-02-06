@@ -81,8 +81,8 @@ const ButtonGroup: FC<ButtonGroupProps> = ({ scrollToEvents, onEventAdded }) => 
 
   const buttons = [
     {
-      text: "Joint Our Community",
-      className: "border-[#2E2E2E] border-2 p-2 rounded-md hover:border-gray-500 transition-all duration-300",
+      text: "Join Our Community",
+      className: "bg-gradient-to-b from-[#FF4E00] to-[#531900] hover:from-orange-400 hover:to-orange-600 rounded-md transition-all p-2 duration-300",
       onClick: () => setIsSocialModalOpen(true)
     },
     {
@@ -90,11 +90,7 @@ const ButtonGroup: FC<ButtonGroupProps> = ({ scrollToEvents, onEventAdded }) => 
       className: "bg-gradient-to-b from-[#FF4E00] to-[#531900] hover:from-orange-400 hover:to-orange-600 transition-all p-2 rounded-md",
       onClick: scrollToEvents
     },
-    {
-      text: "Submit Your Event",
-      className: "border-[#2E2E2E] border-2 p-2 rounded-md hover:border-gray-500 transition-all duration-300",
-      onClick: () => setIsEventModalOpen(true)
-    }
+   
   ];
 
   return (

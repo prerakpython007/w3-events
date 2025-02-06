@@ -342,7 +342,7 @@ const TestimonialCarousel = () => {
   };
 
   return (
-    <div className="w-full my-16 py-8">
+    <div className="w-full lg:mb-44 py-8">
       <h2 className={`${yatraOne.className} text-center text-4xl py-9`}>What Our Community Says</h2>
       <div className="max-w-[92vw] md:max-w-[96vw] mx-auto relative">
         

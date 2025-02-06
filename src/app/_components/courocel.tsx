@@ -55,7 +55,7 @@ const LogoCarousel = () => {
   const repeatedLogos = [...logos, ...logos, ...logos]
 
   return (
-    <div className="overflow-hidden w-full">
+    <div className="overflow-hidden lg:mb-44 w-full">
       <div className="max-w-[92vw] md:max-w-[96vw] mx-auto">
         <h2 className={`text-white ${yatraOne.className} text-3xl md:text-5xl font-medium text-center py-6 md:py-10`}>
           Our Frens
