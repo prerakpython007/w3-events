@@ -10,6 +10,25 @@ const MorphingCursor = () => {
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      const isTouchDevice = (
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        // @ts-ignore
+        navigator.msMaxTouchPoints > 0
+      );
+      setIsMobile(isTouchDevice);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleMouseMove = useCallback((e: MouseEvent): void => {
     setPosition({ x: e.clientX, y: e.clientY });
@@ -24,7 +43,22 @@ const MorphingCursor = () => {
   }, []);
 
   useEffect(() => {
-    // Add cursor: none to body and html
+    // Handle cursor visibility based on device type
+    if (isMobile) {
+      // Reset to default cursor styles on mobile
+      document.body.style.cursor = '';
+      document.documentElement.style.cursor = '';
+      
+      // Remove any existing style tag for cursor hiding
+      const existingStyle = document.getElementById('cursor-style');
+      if (existingStyle) {
+        document.head.removeChild(existingStyle);
+      }
+      
+      return;
+    }
+
+    // Desktop behavior
     document.body.style.cursor = 'none';
     document.documentElement.style.cursor = 'none';
 
@@ -56,11 +90,14 @@ const MorphingCursor = () => {
         element.removeEventListener('mouseleave', () => setIsHovering(false));
       });
     };
-  }, [handleMouseMove, handleMouseDown, handleMouseUp]);
+  }, [handleMouseMove, handleMouseDown, handleMouseUp, isMobile]);
 
-  // Add a style tag to ensure cursor is hidden everywhere
+  // Add a style tag to ensure cursor is hidden everywhere (desktop only)
   useEffect(() => {
+    if (isMobile) return;
+
     const style = document.createElement('style');
+    style.id = 'cursor-style'; // Add an ID for easy removal
     style.textContent = `
       * {
         cursor: none !important;
@@ -69,13 +106,18 @@ const MorphingCursor = () => {
     document.head.appendChild(style);
 
     return () => {
-      document.head.removeChild(style);
+      const existingStyle = document.getElementById('cursor-style');
+      if (existingStyle) {
+        document.head.removeChild(existingStyle);
+      }
     };
-  }, []);
+  }, [isMobile]);
+
+  // Don't render custom cursor on mobile
+  if (isMobile) return null;
 
   return (
-    <div className="fixed inset-0  pointer-events-none z-[200]">
-      {/* Outer ring */}
+    <div className="fixed inset-0 pointer-events-none z-[200]">
       <div
         className="fixed rounded-full border transition-all duration-300"
         style={{
@@ -88,7 +130,6 @@ const MorphingCursor = () => {
         }}
       />
 
-      {/* Main cursor - morphs on hover */}
       <div
         className="fixed transition-all duration-300"
         style={{
@@ -102,10 +143,8 @@ const MorphingCursor = () => {
         }}
       />
 
-      {/* Decorative elements that appear on hover */}
       {isHovering && (
         <>
-          {/* Corner dots */}
           {[0, 90, 180, 270].map((rotation, index) => (
             <div
               key={index}
@@ -127,7 +166,6 @@ const MorphingCursor = () => {
         </>
       )}
 
-      {/* Inner dot */}
       <div
         className="fixed rounded-full bg-[#FFD5C2] mix-blend-difference"
         style={{

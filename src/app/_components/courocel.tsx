@@ -93,7 +93,7 @@ const LogoCarousel = () => {
 
         .infinite-scroll {
           width: 300%; /* Expand width to fit all logos */
-          animation: infinite-scroll ${isMobile ? "60s" : "60s"} linear infinite;
+          animation: infinite-scroll ${isMobile ? "60s" : "70s"} linear infinite;
         }
 
         .infinite-scroll:hover {
