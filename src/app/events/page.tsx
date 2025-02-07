@@ -82,9 +82,9 @@ const EventCard: FC<Event & { index: number }> = ({ id, image_url, title, event_
                 <p className="text-xs text-[#ABABAB] mb-1 group-hover:text-white/90 transition-colors duration-300">
                     📍{location}
                 </p>
-                <p className="text-xs text-[#ABABAB] group-hover:text-white/90 transition-colors duration-300">
+                {/* <p className="text-xs text-[#ABABAB] group-hover:text-white/90 transition-colors duration-300">
                     Expires: {new Date(expires_on).toLocaleDateString()}
-                </p>
+                </p> */}
             </motion.div>
         </motion.div>
     );

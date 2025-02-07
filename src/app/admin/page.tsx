@@ -67,7 +67,7 @@ const AdminLogin = () => {
             variants={fadeInUp}
             className="text-center"
           >
-            <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br text-[#c2673d] font-serif">
+            <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br text-[#ca5823] font-serif">
               Admin Panel
             </h1>
           </motion.div>

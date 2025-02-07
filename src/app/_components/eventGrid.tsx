@@ -83,9 +83,9 @@ const EventCard: FC<Event & { index: number }> = ({ id, image_url, title, event_
                 <p className="text-xs text-[#ABABAB] mb-1 group-hover:text-white/90 transition-colors duration-300">
                     📍{location}
                 </p>
-                <p className="text-xs text-[#ABABAB] group-hover:text-white/90 transition-colors duration-300">
+                {/* <p className="text-xs text-[#ABABAB] group-hover:text-white/90 transition-colors duration-300">
                     Expires: {new Date(expires_on).toLocaleDateString()}
-                </p>
+                </p> */}
             </motion.div>
         </motion.div>
     );
@@ -284,21 +284,20 @@ useEffect(() => {
 >
   Discover events around the world
 </motion.h1>
+                        <motion.p  
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.4 }}
+                        className="text-[#FFD5C2] text-sm sm:text-base md:text-lg lg:text-xl"
+                        >We are largest web3 culture and events platform</motion.p>
                         
-                        <motion.p 
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className="text-sm sm:text-base md:text-lg lg:text-lg text-[#FFD5C2] px-4 mb-8"
-                        >
-                            Empowering over 10,000 pioneers through {events.length}+ events and 200+ collaborations.
-                        </motion.p>
+                       
 
                         <motion.div 
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.5 }}
-                            className="w-full py-10 max-w-[280px] sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto px-4 mb-8"
+                            className="w-full py-10 max-w-[280px] sm:max-w-md  md:max-w-lg lg:max-w-xl mx-auto px-4 mb-8"
                         >
                             <div className="relative group">
                                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent rounded-full blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100"></div>
@@ -320,6 +319,7 @@ useEffect(() => {
                                     >
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
+                                    
                                 </div>
                                 
                             </div>
@@ -328,11 +328,13 @@ useEffect(() => {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => setIsModalOpen(true)}
-                                className="text-white w-44 bg-[#1E1E1E] px-6 py-3 rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300"
+                                className="text-white  bg-[#1E1E1E] lg:relative lg:left-[500px] lg:bottom-[90px] px-5 py-3  text-sm rounded-lg hover:bg-[#2a2a2a] transition-colors duration-300"
                             >
                                 Add your event
                                 </motion.button>
                             </div>
+                            
+                            
                         </motion.div>
                     </motion.div>
                     {/* <div className=" " >

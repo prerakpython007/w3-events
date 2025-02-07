@@ -27,9 +27,6 @@ const LogoCarousel = () => {
     { id: 1, src: "/l1.png", alt: "Logo 1" },
     { id: 2, src: "/l2.jpeg", alt: "Logo 2" },
     { id: 3, src: "/l3.png", alt: "Logo 3" },
-    { id: 4, src: "/l4.png", alt: "Logo 4" },
-    { id: 5, src: "/l5.png", alt: "Logo 5" },
-    { id: 6, src: "/l6.png", alt: "Logo 6" },
     { id: 7, src: "/l7.png", alt: "Logo 7" },
     { id: 8, src: "/l8.png", alt: "Logo 8" },
     { id: 9, src: "/l9.png", alt: "Logo 9" },
@@ -44,12 +41,27 @@ const LogoCarousel = () => {
     { id: 18, src: "/l18.png", alt: "Logo 18" },
     { id: 19, src: "/l19.png", alt: "Logo 19" },
     { id: 20, src: "/l20.png", alt: "Logo 20" },
-    { id: 21, src: "/l21.png", alt: "Logo 21" },
     { id: 22, src: "/l22.jpeg", alt: "Logo 22" },
     { id: 23, src: "/l23.png", alt: "Logo 23" },
     { id: 24, src: "/l24.png", alt: "Logo 24" },
     { id: 25, src: "/l25.png", alt: "Logo 25" },
     { id: 26, src: "/l26.jpeg", alt: "Logo 26" },
+    { id: 27, src: "/l27.jpg", alt: "Logo 27" },
+    { id: 28, src: "/l28.jpg", alt: "Logo 28" },
+    { id: 29, src: "/l29.jpg", alt: "Logo 29" },
+    { id: 30, src: "/l30.jpg", alt: "Logo 30" },
+    { id: 31, src: "/l31.jpg", alt: "Logo 31" },
+    { id: 32, src: "/l32.jpg", alt: "Logo 32" },
+    { id: 33, src: "/l33.jpg", alt: "Logo 33" },
+    { id: 34, src: "/l34.jpg", alt: "Logo 34" },
+    { id: 35, src: "/l35.jpg", alt: "Logo 35" },
+    { id: 36, src: "/l36.jpg", alt: "Logo 36" },
+    { id: 37, src: "/l37.jpg", alt: "Logo 37" },
+    { id: 38, src: "/l38.jpg", alt: "Logo 38" },
+    { id: 39, src: "/l39.jpg", alt: "Logo 39" },
+    { id: 40, src: "/l40.jpg", alt: "Logo 40" },
+    { id: 41, src: "/l41.jpg", alt: "Logo 41" },
+    { id: 42, src: "/l42.jpg", alt: "Logo 42" },
   ]
 
   const repeatedLogos = [...logos, ...logos, ...logos]
@@ -73,7 +85,7 @@ const LogoCarousel = () => {
                   src={logo.src || "/placeholder.svg"}
                   alt={logo.alt}
                   className="h-8 md:h-12 w-auto object-contain"
-                  priority={index < 26}
+                  priority={index < 42}
                 />
               </div>
             ))}
@@ -93,7 +105,7 @@ const LogoCarousel = () => {
 
         .infinite-scroll {
           width: 300%; /* Expand width to fit all logos */
-          animation: infinite-scroll ${isMobile ? "60s" : "70s"} linear infinite;
+          animation: infinite-scroll ${isMobile ? "60s" : "50s"} linear infinite;
         }
 
         .infinite-scroll:hover {

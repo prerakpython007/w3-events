@@ -80,22 +80,23 @@ const ButtonGroup: FC<ButtonGroupProps> = ({ scrollToEvents, onEventAdded }) => 
   };
 
   const buttons = [
-    {
-      text: "Join Our Community",
-      className: "bg-gradient-to-b from-[#FF4E00] to-[#531900] hover:from-orange-400 hover:to-orange-600 rounded-md transition-all p-2 duration-300",
-      onClick: () => setIsSocialModalOpen(true)
-    },
+    
     {
       text: "Explore Events",
-      className: "bg-gradient-to-b from-[#FF4E00] to-[#531900] hover:from-orange-400 hover:to-orange-600 transition-all p-2 rounded-md",
+      className: " w-48 bg-gradient-to-b from-[#FF4E00] to-[#531900] hover:from-orange-400 hover:to-orange-600 transition-all p-2  rounded-md",
       onClick: scrollToEvents
     },
+    {
+      text: "Join Our Community",
+      className: " w-48 bg-gradient-to-b from-[#FF4E00] to-[#531900] hover:from-orange-400 hover:to-orange-600 rounded-md transition-all p-2  duration-300",
+      onClick: () => setIsSocialModalOpen(true)
+    }
    
   ];
 
   return (
     <>
-      <div className="button-group flex lg:mt-14 flex-col space-x-4 sm:flex-row gap-10">
+      <div className="button-group flex lg:mt-14 flex-col lg:space-x-4  sm:flex-row gap-10">
         {buttons.map((button, index) => (
           <motion.button
             key={button.text}

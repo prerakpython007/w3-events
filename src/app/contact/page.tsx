@@ -5,6 +5,7 @@ import { Yatra_One } from 'next/font/google';
 import Image from 'next/image';
 import { FaWhatsapp } from 'react-icons/fa';
 import { RiTelegram2Line } from 'react-icons/ri';
+import { motion } from 'framer-motion';
 
 const yatraOne = Yatra_One({
   weight: '400',
@@ -85,7 +86,32 @@ const ContactPage = () => {
                  ✦
                  </div>
                </a>
+            
       </div>
+      <div className="text-center mt-28">
+        <motion.div 
+            className="text-[#707070] mt-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            Email us at{" "}
+            <motion.span 
+              className="bg-orange-700 px-2 py-1 text-white   ml-1 rounded inline-block"
+              animate={{ 
+                opacity: [1, 0.7, 1],
+                scale: [1, 1.02, 1]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              admin@web3event.in
+            </motion.span>
+          </motion.div>
+          </div>
     </div>
   );
 };

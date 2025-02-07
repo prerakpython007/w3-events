@@ -56,10 +56,16 @@ export default function Home() {
     leading-normal sm:leading-relaxed lg:leading-[70px] 
     py-3
     mt-6
-    text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFDCB5] to-[#85472B]
+   
   `}
 >
-  You shape Web3 <br className="" /> Web3 shapes you
+<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#85472B] via-[#FFDCB5] to-white">
+   You shape Web3
+ </span>
+ <br />
+ <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFDCB5] to-[#85472B]">
+   Web3 shapes you
+ </span>
 </motion.h1>
 
 
