@@ -1,12 +1,13 @@
-"use client"
+'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  login: () => void;
-  logout: () => void;
+  login: () => Promise<void>;
+  logout: () => Promise<void>;
+  checkAuthStatus: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -15,25 +16,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    const status = localStorage.getItem('isLoggedIn') === 'true';
-    setIsLoggedIn(status);
-  }, []);
-
-  const login = () => {
-    localStorage.setItem('isLoggedIn', 'true');
-    setIsLoggedIn(true);
-  
+  const checkAuthStatus = async () => {
+    try {
+      const response = await fetch('/api/auth/check', {
+        credentials: 'include'
+      });
+      const isValid = response.ok;
+      setIsLoggedIn(isValid);
+      return isValid;
+    } catch (error) {
+      setIsLoggedIn(false);
+      return false;
+    }
   };
 
-  const logout = () => {
-    localStorage.removeItem('isLoggedIn');
-    setIsLoggedIn(false);
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
 
+  const login = async () => {
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+    } finally {
+      setIsLoggedIn(false);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, checkAuthStatus }}>
       {children}
     </AuthContext.Provider>
   );

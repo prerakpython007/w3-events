@@ -43,12 +43,11 @@ const AdminLogin = () => {
         );
     }
   
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (credentials.username === 'admin@web3.com' && credentials.password === 'admin@123') {
         setError('');
-        login();
-        // Navigate to dashboard or show success message
+        await login();
       } else {
         setError('Invalid credentials');
       }
