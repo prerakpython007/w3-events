@@ -48,7 +48,7 @@ const ContactPage = () => {
       {/* Social Links Section */}
       <div className="flex gap-4 sm:gap-6 lg:gap-8 items-center justify-center">
         <a 
-                 href="#" 
+                 href="http://X.com/web3_events" 
                  className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full"
                  aria-label="Follow us on X"
                >
@@ -58,7 +58,7 @@ const ContactPage = () => {
                </a>
                
                <a 
-                 href="#" 
+                 href="http://T.me/web3eventsind" 
                  className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2  focus:ring-orange-400 rounded-full"
                  aria-label="Follow us on Facebook"
                >
@@ -68,7 +68,7 @@ const ContactPage = () => {
                </a>
                
                <a 
-                 href="#" 
+                 href="https://chat.whatsapp.com/CikzaZtzSwR7gnKE1hJaQQ" 
                  className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full"
                  aria-label="Follow us on LinkedIn"
                >
@@ -77,7 +77,7 @@ const ContactPage = () => {
                  </div>
                </a>
                <a 
-                 href="#" 
+                 href="http://Lu.ma/web3_events" 
                  className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full"
                  aria-label="Follow us on LinkedIn"
                >
@@ -108,7 +108,9 @@ const ContactPage = () => {
                 ease: "easeInOut"
               }}
             >
+              <a href="mailto:admin@web3events.in">
               admin@web3event.in
+              </a>
             </motion.span>
           </motion.div>
           </div>

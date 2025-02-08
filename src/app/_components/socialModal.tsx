@@ -99,25 +99,25 @@ const SocialModal = ({ isOpen, onClose }: CommunityModalProps) => {
         </div>
 
         <div className="flex gap-3 sm:gap-4 md:gap-6 items-center justify-center">
-          <a href="#" className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full">
+          <a href="http://X.com/web3_events" className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full">
             <div className="border-2 border-orange-600 hover:border-orange-600 hover:bg-orange-600 bg-orange-50 bg-opacity-10 p-4 rounded-full relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-colors duration-300">
               <XLogo />
             </div>
           </a>
           
-          <a href="#" className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full">
+          <a href="http://T.me/web3eventsind" className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full">
             <div className="border-2 border-orange-600 hover:border-orange-600 hover:bg-orange-600 bg-orange-50 bg-opacity-10 p-4 rounded-full relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-colors duration-300">
               <RiTelegram2Line className="w-6 h-6 text-white" />
             </div>
           </a>
           
-          <a href="#" className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full">
+          <a href="https://chat.whatsapp.com/CikzaZtzSwR7gnKE1hJaQQ" className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full">
             <div className="border-2 border-orange-600 hover:border-orange-600 hover:bg-orange-600 bg-orange-50 bg-opacity-10 p-4 rounded-full relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-colors duration-300">
               <FaWhatsapp className='w-6 h-6 text-white' />
             </div>
           </a>
 
-          <a href="#" className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full">
+          <a href="http://Lu.ma/web3_events" className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full">
             <div className="border-2 border-orange-600 text-3xl hover:border-orange-600 hover:bg-orange-600 bg-orange-50 bg-opacity-10 p-4 rounded-full relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-colors duration-300">
               ✦
             </div>
@@ -144,7 +144,9 @@ const SocialModal = ({ isOpen, onClose }: CommunityModalProps) => {
                 ease: "easeInOut"
               }}
             >
+              <a href="mailto:admin@web3events.in">
               admin@web3event.in
+              </a>
             </motion.span>
           </motion.div>
           </div>

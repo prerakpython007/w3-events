@@ -25,7 +25,7 @@ const Footer = () => {
       
       <div className="flex gap-6 sm:gap-8 lg:gap-10 items-center justify-center mt-16">
         <a 
-          href="#" 
+          href="http://X.com/web3_events" 
           className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full"
           aria-label="Follow us on X"
         >
@@ -35,7 +35,7 @@ const Footer = () => {
         </a>
         
         <a 
-          href="#" 
+          href="http://T.me/web3eventsind" 
           className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full"
         >
           <div className="border-2 border-orange-600 hover:border-orange-600 hover:bg-orange-600 bg-orange-50 bg-opacity-10 p-4 rounded-full relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-colors duration-300">
@@ -44,7 +44,7 @@ const Footer = () => {
         </a>
         
         <a 
-          href="#" 
+          href="https://chat.whatsapp.com/CikzaZtzSwR7gnKE1hJaQQ" 
           className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full"
         >
           <div className="border-2 border-orange-600 hover:border-orange-600 hover:bg-orange-600 bg-orange-50 bg-opacity-10 p-4 rounded-full relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-colors duration-300">
@@ -53,7 +53,7 @@ const Footer = () => {
         </a>
         
         <a 
-          href="#" 
+          href="http://Lu.ma/web3_events" 
           className="transform transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded-full"
         >
           <div className="border-2 border-orange-600 hover:border-orange-600 text-3xl hover:bg-orange-600 bg-orange-50 bg-opacity-10 p-4 rounded-full relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-colors duration-300">
@@ -68,6 +68,7 @@ const Footer = () => {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
                 >
+                  
                   Email us at{" "}
                   <motion.span 
                     className="bg-orange-700 px-2 py-1 text-white   ml-1 rounded inline-block"
@@ -81,7 +82,9 @@ const Footer = () => {
                       ease: "easeInOut"
                     }}
                   >
+                    <a href=" mailto:admin@web3events.in">
                     admin@web3event.in
+                    </a>
                   </motion.span>
                 </motion.div>
                 </div>
