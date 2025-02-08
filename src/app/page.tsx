@@ -8,6 +8,7 @@ import Carousel from "./_components/courocel";
 import TestimonialCarousel from "./_components/manualCurosel";
 import Footer from "./_components/footer";
 import { useRef } from "react";
+import BackgroundShapes from "./_components/bgElement";
 
 
 const yatraOne = Yatra_One({
@@ -40,7 +41,7 @@ export default function Home() {
 
   return (
     <>
-    
+    <BackgroundShapes/>
     <div className="grid min-h-screen w-full px-4 mt-24 lg:mt-32 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-10 pb-12 sm:pb-16 lg:pb-20 items-center justify-items-center  font-[family-name:var(--font-geist-sans)]">
       <motion.h1
   initial={{ opacity: 0, y: 50 }} // Starting position when the page loads
