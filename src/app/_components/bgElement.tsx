@@ -58,8 +58,8 @@ const BackgroundShapes = () => {
     const animate = () => {
       requestAnimationFrame(animate);
       shapes.forEach(shape => {
-        shape.rotation.x += 0.01;
-        shape.rotation.y += 0.01;
+        shape.rotation.x += 0.003;
+        shape.rotation.y += 0.003;
       });
       renderer.render(scene, camera);
     };

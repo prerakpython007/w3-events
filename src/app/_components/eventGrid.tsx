@@ -220,14 +220,14 @@ useEffect(() => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="w-full  min-h-screen"
+            className="w-[90vw] min-h-screen"
         >
             <motion.div 
                 className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-white to-[#85472B] origin-left z-50"
                 style={{ scaleX }}
             />
             
-            <div className="w-full h-fit min-h-screen relative rounded-3xl overflow-hidden">
+            <div className="w-[90%] m-auto h-fit min-h-screen relative rounded-3xl overflow-hidden">
                 <Image 
                     src="/bg1.png" 
                     alt="Event background"
@@ -235,6 +235,7 @@ useEffect(() => {
                     height={1080}
                     className="absolute inset-0 w-full h-full object-cover"
                     priority
+                    quality={100}
                 />
                 
                 <motion.div 
